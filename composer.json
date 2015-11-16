@@ -3,7 +3,7 @@
   "description": "API Abstraction layer with mocks",
   "license": "MIT",
   "type": "library",
-  "homepage": "http://toplib.github.io/genericapi/",
+  "homepage": "http://toplib.github.io/generic-api/",
   "authors": [
     {
       "name": "Rafael SR",
