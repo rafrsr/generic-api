@@ -1,5 +1,5 @@
 {
-  "name": "toplib/genericapi",
+  "name": "toplib/generic-api",
   "description": "API Abstraction layer with mocks",
   "license": "MIT",
   "type": "library",
