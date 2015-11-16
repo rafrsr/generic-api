@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Generic API by toplib</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Generic API</h1>
+      <h2 class="project-tagline">API Abstraction layer with mocks.Connect to external API easy and follow some simple guidelines.</h2>
+      <a href="https://github.com/toplib/generic-api" class="btn">View on GitHub</a>
+      <a href="https://github.com/toplib/generic-api/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/toplib/generic-api/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="generic-api" class="anchor" href="#generic-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Generic API</h1>
+
+<p><a href="https://travis-ci.org/toplib/generic-api"><img src="https://travis-ci.org/toplib/generic-api.svg?branch=master" alt="Build Status"></a>
+<a href="https://coveralls.io/github/toplib/generic-api?branch=master"><img src="https://coveralls.io/repos/toplib/generic-api/badge.svg?branch=master&amp;service=github" alt="Coverage Status"></a>
+<a href="https://packagist.org/packages/toplib/generic-api"><img src="https://poser.pugx.org/toplib/generic-api/version" alt="Latest Stable Version"></a>
+<a href="//packagist.org/packages/toplib/generic-api"><img src="https://poser.pugx.org/toplib/generic-api/v/unstable" alt="Latest Unstable Version"></a>
+<a href="https://packagist.org/packages/toplib/generic-api"><img src="https://poser.pugx.org/toplib/generic-api/downloads" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/toplib/generic-api"><img src="https://poser.pugx.org/toplib/generic-api/license" alt="License"></a></p>
+
+<p>API Abstraction layer with mocks.Connect to external API easy and follow some simple guidelines.</p>
+
+<p>Most APIs provide a SDK or API implementation library in parallel.
+But this not always true, or simply not made in our required language (php).
+For this cases is necessary implements the API from scratch.
+GenericApi is solution to keep things organized and follow a similar pattern for all libraries.</p>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>
+<strong>Mocks:</strong> Emulate request and response for test environments</li>
+<li>
+<strong>Validation:</strong> Use powerful symfony validations to validate a request before send to a server</li>
+<li>
+<strong>Connection Abstraction:</strong> Only create the request, the connection is done automatically with guzzle, no more complicated curl connections.</li>
+<li>
+<strong>Xml and Json Parser:</strong> Can use XML and JSON parser to convert API response to objects using JMS serializer</li>
+<li>
+<strong>Scaffolding:</strong> Test API connection and any method using generic classes</li>
+</ul>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<ol>
+<li><a href="https://getcomposer.org/download/">Install composer</a></li>
+<li>Execute: <code>composer require toplib/generic-api</code>
+</li>
+</ol>
+
+<h2>
+<a id="implementing-specific-api" class="anchor" href="#implementing-specific-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementing specific API</h2>
+
+<h3>
+<a id="creating-the-api" class="anchor" href="#creating-the-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating the API</h3>
+
+<p>Firstly create a empty class for your API that extends of GenericApi class. Some methods will be created later.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Toplib\GenericApi\GenericApi</span>;</span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">SampleAPI</span> <span class="pl-k">extends</span> <span class="pl-e">GenericApi</span></span>
+<span class="pl-s1">{</span></pre></div>
+
+<h3>
+<a id="creating-a-service" class="anchor" href="#creating-a-service" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a Service</h3>
+
+<p>A service is the class required to do some specific action, ej. DeleteUser is the service to delete some specific user.</p>
+
+<p>Each service must implements ApiServiceInterface.
+Should return a valid <code>ApiRequest</code> in the method <code>getApiRequest</code> and should parse the response in the method <code>parseResponse</code>.
+The response can vary depending of your needs.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Toplib\GenericApi\ApiFactory</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Toplib\GenericApi\ApiServiceInterface</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Toplib\GenericApi\Serializer\JsonMessageParser</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">GetPost</span> <span class="pl-k">implements</span> <span class="pl-e">ApiServiceInterface</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * @Assert\NotBlank()</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$postId</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * GetPost constructor.</span></span>
+<span class="pl-s1"><span class="pl-c">     *</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> $postId</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-c1">__construct</span>(<span class="pl-smi">$postId</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">postId</span> <span class="pl-k">=</span> <span class="pl-smi">$postId</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> mixed</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">getPostId</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">postId</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * @inheritDoc</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">getApiRequest</span>(<span class="pl-c1">ApiInterface</span> <span class="pl-smi">$api</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">       <span class="pl-smi">$url</span> <span class="pl-k">=</span> <span class="pl-c1">sprintf</span>(<span class="pl-s"><span class="pl-pds">'</span>http://jsonplaceholder.typicode.com/posts/%s<span class="pl-pds">'</span></span>, <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>getPostId());</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">       <span class="pl-k">return</span> <span class="pl-c1">ApiFactory</span><span class="pl-k">::</span>createRequest(<span class="pl-s"><span class="pl-pds">'</span>get<span class="pl-pds">'</span></span>, <span class="pl-smi">$url</span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * @inheritDoc</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">parseResponse</span>(<span class="pl-c1">ResponseInterface</span> <span class="pl-smi">$response</span>, <span class="pl-c1">ApiInterface</span> <span class="pl-smi">$api</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">JsonMessageParser</span>(<span class="pl-s"><span class="pl-pds">'</span>Toplib<span class="pl-cce">\\</span>SampleApi<span class="pl-cce">\\</span>Model<span class="pl-cce">\\</span>Post<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
+
+<blockquote>
+<p>Note: No communication happen in the service, only build the request required to send to the external server.</p>
+</blockquote>
+
+<p>When create the request in the service can customize a lot of options to create advanced requests</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$request</span> <span class="pl-k">=</span>  <span class="pl-c1">ApiFactory</span><span class="pl-k">::</span>createRequest(<span class="pl-s"><span class="pl-pds">'</span>get<span class="pl-pds">'</span></span>, <span class="pl-smi">$url</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$request</span><span class="pl-k">-&gt;</span>SSLVerification(<span class="pl-c1">false</span>)</span>
+<span class="pl-s1">        <span class="pl-k">-&gt;</span>setJson([<span class="pl-s"><span class="pl-pds">'</span>post<span class="pl-pds">'</span></span><span class="pl-k">=&gt;</span>[<span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span><span class="pl-k">=&gt;</span><span class="pl-c1">1</span>]])</span>
+<span class="pl-s1">        <span class="pl-k">-&gt;</span>setAuth(<span class="pl-s"><span class="pl-pds">'</span>username<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>password<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1">        <span class="pl-k">-&gt;</span>setAuth(<span class="pl-s"><span class="pl-pds">'</span>username<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>password<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1">        <span class="pl-k">-&gt;</span>setCurlOption(<span class="pl-c1">CURLOPT_CAPATH</span>,<span class="pl-s"><span class="pl-pds">'</span>/var/...<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1">        <span class="pl-k">...</span></span>
+<span class="pl-s1"></span></pre></div>
+
+<p>To view all available options see the <a href="http://docs.guzzlephp.org/en/5.3/clients.html#request-options">guzzle documentation</a>.</p>
+
+<h3>
+<a id="create-the-public-method-in-the-api-class" class="anchor" href="#create-the-public-method-in-the-api-class" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create the public method in the API class</h3>
+
+<p>It's the user/developer end-point to use the api, you must create a way to call the service</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c"> * Class SampleAPI</span></span>
+<span class="pl-s1"><span class="pl-c"> */</span></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">SampleAPI</span> <span class="pl-k">extends</span> <span class="pl-e">GenericApi</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> $id</span></span>
+<span class="pl-s1"><span class="pl-c">     *</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> Post</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@throws</span> \Toplib\GenericApi\Exception\ApiException</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">getPost</span>(<span class="pl-smi">$id</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$service</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">GetPost</span>();</span>
+<span class="pl-s1">        <span class="pl-smi">$service</span><span class="pl-k">-&gt;</span>setPostId(<span class="pl-smi">$id</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>process(<span class="pl-smi">$service</span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
+
+<p>alternatively without create the public method, the service can be used as is.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1">    <span class="pl-smi">$api</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">SampleApi</span>();</span>
+<span class="pl-s1">    <span class="pl-smi">$service</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">GetPost</span>();</span>
+<span class="pl-s1">    <span class="pl-smi">$service</span><span class="pl-k">-&gt;</span>setPostId(<span class="pl-c1">1</span>);</span>
+<span class="pl-s1">    <span class="pl-smi">$response</span> <span class="pl-k">=</span> <span class="pl-smi">$api</span><span class="pl-k">-&gt;</span>process(<span class="pl-smi">$service</span>);</span>
+<span class="pl-s1">    <span class="pl-c">//parse the response</span></span></pre></div>
+
+<p>But use a public method is very easy</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1">    <span class="pl-smi">$api</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">SampleApi</span>();</span>
+<span class="pl-s1">    <span class="pl-smi">$post</span> <span class="pl-k">=</span> <span class="pl-smi">$api</span><span class="pl-k">-&gt;</span>get(<span class="pl-c1">1</span>);</span></pre></div>
+
+<h3>
+<a id="validation" class="anchor" href="#validation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Validation</h3>
+
+<p>Validate service data before send the request to a remote server. Use Symfony validation annotations.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * @Assert\\NotBlank()</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$postId</span>;</span></pre></div>
+
+<p>Validations are triggered just before send the request to a remote server or mock.</p>
+
+<h3>
+<a id="serialization" class="anchor" href="#serialization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Serialization</h3>
+
+<p>Can use jms/serializer or any other library to send/receive data.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1">   <span class="pl-k">...</span></span>
+<span class="pl-s1">   <span class="pl-smi">$xmlBody</span> <span class="pl-k">=</span> <span class="pl-c1">SerializerBuilder</span><span class="pl-k">::</span>create()<span class="pl-k">-&gt;</span>build()<span class="pl-k">-&gt;</span>serialize(<span class="pl-smi">$this</span>, <span class="pl-s"><span class="pl-pds">'</span>xml<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1">   <span class="pl-k">return</span> <span class="pl-c1">ApiFactory</span><span class="pl-k">::</span>createRequest(<span class="pl-s"><span class="pl-pds">'</span>post<span class="pl-pds">'</span></span>, <span class="pl-smi">$url</span>, <span class="pl-smi">$xmlBody</span>);</span></pre></div>
+
+<p>In the <code>parseResponse</code> method of the service you receive a raw response from the server</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"> <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">parseResponse</span>(<span class="pl-c1">ResponseInterface</span> <span class="pl-smi">$response</span>, <span class="pl-c1">ApiInterface</span> <span class="pl-smi">$api</span>)</span>
+<span class="pl-s1"></span></pre></div>
+
+<p>Can manage and return the response as you need. Or can use one of the following parsers:</p>
+
+<ul>
+<li>JsonMessageParser</li>
+<li>XMLMessageParser</li>
+</ul>
+
+<p>The above parsers deserialize the responses automatically.</p>
+
+<h5>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example:</h5>
+
+<p>using <code>JsonMessageParser</code> (based on JMS\Serializer)</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">return</span> JsonMessageParser(<span class="pl-s"><span class="pl-pds">'</span>Toplib<span class="pl-cce">\\</span>SampleApi<span class="pl-cce">\\</span>Model<span class="pl-cce">\\</span>Post<span class="pl-pds">'</span></span>);</span></pre></div>
+
+<p>or manually</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$responseJson</span> <span class="pl-k">=</span> <span class="pl-smi">$response</span><span class="pl-k">-&gt;</span>getBody()<span class="pl-k">-&gt;</span>getContents();</span>
+<span class="pl-s1"><span class="pl-smi">$postArray</span> <span class="pl-k">=</span> <span class="pl-c1">json_decode</span>(<span class="pl-smi">$responseJson</span>, <span class="pl-c1">true</span>);</span>
+<span class="pl-s1"><span class="pl-smi">$post</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">Post</span>();</span>
+<span class="pl-s1"><span class="pl-smi">$post</span><span class="pl-k">-&gt;</span>setId(<span class="pl-smi">$postArray</span>[<span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span>]);</span>
+<span class="pl-s1"><span class="pl-smi">$post</span><span class="pl-k">-&gt;</span>setUserId(<span class="pl-smi">$postArray</span>[<span class="pl-s"><span class="pl-pds">'</span>userId<span class="pl-pds">'</span></span>]);</span>
+<span class="pl-s1"><span class="pl-smi">$post</span><span class="pl-k">-&gt;</span>setTitle(<span class="pl-smi">$postArray</span>[<span class="pl-s"><span class="pl-pds">'</span>title<span class="pl-pds">'</span></span>]);</span>
+<span class="pl-s1"><span class="pl-smi">$post</span><span class="pl-k">-&gt;</span>setBody(<span class="pl-smi">$postArray</span>[<span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span>]);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">return</span> <span class="pl-smi">$post</span>;</span></pre></div>
+
+<h3>
+<a id="mocking-a-service" class="anchor" href="#mocking-a-service" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mocking a service</h3>
+
+<p>The mock is a optional param when create a api request in the service and emulate the HTTP layer without needing to send requests over the internet.
+Mocks are very useful to emulate responses for test environments, developing or refactoring the api without need of send real requests.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c"> * Class GetPostMock</span></span>
+<span class="pl-s1"><span class="pl-c"> */</span></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">GetPostMock</span> <span class="pl-k">implements</span> <span class="pl-e">ApiMockInterface</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * @inheritDoc</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">mock</span>(<span class="pl-c1">RequestInterface</span> <span class="pl-smi">$request</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$post</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>userId<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">1</span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">1</span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>title<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>sunt aut facere repellat provident ...<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>quia et suscipit suscipit recusandae consequuntur expedita ...<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">        ];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-c1">ApiFactory</span><span class="pl-k">::</span>createResponse(<span class="pl-c1">json_encode</span>(<span class="pl-smi">$post</span>, <span class="pl-c1">1</span>));</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span></pre></div>
+
+<p>should be settled when create the request in the service</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-c1">ApiFactory</span><span class="pl-k">::</span>createRequest(<span class="pl-s"><span class="pl-pds">'</span>get<span class="pl-pds">'</span></span>, <span class="pl-smi">$url</span>, [], [], <span class="pl-k">new</span> <span class="pl-c1">GetPostMock</span>());</span></pre></div>
+
+<p>and change the mode of your API</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$api</span><span class="pl-k">-&gt;</span>setMode(<span class="pl-c1">ApiInterface</span><span class="pl-k">::</span><span class="pl-c1">MODE_MOCK</span>);</span></pre></div>
+
+<h3>
+<a id="generic-classes-for-scaffolding" class="anchor" href="#generic-classes-for-scaffolding" aria-hidden="true"><span class="octicon octicon-link"></span></a>Generic classes for Scaffolding</h3>
+
+<p>For rapid scaffolding, tests or small services can use generic classes as is.
+Without the need of create a class for that service.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$api</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">GenericApi</span>(<span class="pl-c1">ApiInterface</span><span class="pl-k">::</span><span class="pl-c1">MODE_LIVE</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$request</span> <span class="pl-k">=</span> <span class="pl-c1">ApiFactory</span><span class="pl-k">::</span>createRequest(<span class="pl-s"><span class="pl-pds">'</span>get<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>http://jsonplaceholder.typicode.com/posts/1<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"><span class="pl-smi">$service</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">GenericApiService</span>(<span class="pl-smi">$request</span>);</span>
+<span class="pl-s1"><span class="pl-smi">$response</span> <span class="pl-k">=</span> <span class="pl-smi">$api</span><span class="pl-k">-&gt;</span>process(<span class="pl-smi">$service</span>);</span></pre></div>
+
+<p>Below the same example but mocking the response. Generic mock can be created using a callable function in this case.</p>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$api</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">GenericApi</span>(<span class="pl-c1">ApiInterface</span><span class="pl-k">::</span><span class="pl-c1">MODE_MOCK</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$request</span> <span class="pl-k">=</span> <span class="pl-c1">ApiFactory</span><span class="pl-k">::</span>createRequest(<span class="pl-s"><span class="pl-pds">'</span>get<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>http://jsonplaceholder.typicode.com/posts/1<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$mockCallback</span> <span class="pl-k">=</span> <span class="pl-k">function</span> (<span class="pl-c1">RequestInterface</span> <span class="pl-smi">$request</span>) {</span>
+<span class="pl-s1">    <span class="pl-smi">$post</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>userId<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">1</span>,</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">1</span>,</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>title<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>sunt aut facere repellat provident occaecati excepturi optio reprehenderit<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae ut ut quas totam nostrum rerum est autem sunt rem eveniet architecto<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    ];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-c1">ApiFactory</span><span class="pl-k">::</span>createResponse(<span class="pl-c1">json_encode</span>(<span class="pl-smi">$post</span>, <span class="pl-c1">1</span>));</span>
+<span class="pl-s1">};</span>
+<span class="pl-s1"><span class="pl-smi">$request</span><span class="pl-k">-&gt;</span>setMock(<span class="pl-k">new</span> <span class="pl-c1">GenericApiMock</span>(<span class="pl-smi">$mockCallback</span>));</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$service</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">GenericApiService</span>(<span class="pl-smi">$request</span>);</span>
+<span class="pl-s1"><span class="pl-smi">$response</span> <span class="pl-k">=</span> <span class="pl-smi">$api</span><span class="pl-k">-&gt;</span>process(<span class="pl-smi">$service</span>);</span></pre></div>
+
+<h2>
+<a id="functional-example" class="anchor" href="#functional-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Functional Example</h2>
+
+<p>Can view a more complex example of functional API in the "sample" folder.</p>
+
+<h2>
+<a id="copyright" class="anchor" href="#copyright" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright</h2>
+
+<p>This project is licensed under the <a href="LICENSE">MIT license</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/toplib/generic-api">Generic API</a> is maintained by <a href="https://github.com/toplib">toplib</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
