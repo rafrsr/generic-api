@@ -1,11 +1,11 @@
 # Generic API
 
-[![Build Status](https://travis-ci.org/toplib/genericapi.svg?branch=master)](https://travis-ci.org/toplib/genericapi)
-[![Coverage Status](https://coveralls.io/repos/toplib/genericapi/badge.svg?branch=master&service=github)](https://coveralls.io/github/toplib/genericapi?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/toplib/genericapi/version)](https://packagist.org/packages/toplib/genericapi)
-[![Latest Unstable Version](https://poser.pugx.org/toplib/genericapi/v/unstable)](//packagist.org/packages/toplib/genericapi)
-[![Total Downloads](https://poser.pugx.org/toplib/genericapi/downloads)](https://packagist.org/packages/toplib/genericapi)
-[![License](https://poser.pugx.org/toplib/genericapi/license)](https://packagist.org/packages/toplib/genericapi)
+[![Build Status](https://travis-ci.org/toplib/generic-api.svg?branch=master)](https://travis-ci.org/toplib/generic-api)
+[![Coverage Status](https://coveralls.io/repos/toplib/generic-api/badge.svg?branch=master&service=github)](https://coveralls.io/github/toplib/generic-api?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/toplib/generic-api/version)](https://packagist.org/packages/toplib/generic-api)
+[![Latest Unstable Version](https://poser.pugx.org/toplib/generic-api/v/unstable)](//packagist.org/packages/toplib/generic-api)
+[![Total Downloads](https://poser.pugx.org/toplib/generic-api/downloads)](https://packagist.org/packages/toplib/generic-api)
+[![License](https://poser.pugx.org/toplib/generic-api/license)](https://packagist.org/packages/toplib/generic-api)
 
 API Abstraction layer with mocks.Connect to external API easy and follow some simple guidelines.
 
@@ -26,7 +26,7 @@ GenericApi is solution to keep things organized and follow a similar pattern for
 ## Installation
 
 1. [Install composer](https://getcomposer.org/download/)
-2. Execute: `composer require toplib/genericapi`
+2. Execute: `composer require toplib/generic-api`
 
 ## Implementing specific API
 
