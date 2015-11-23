@@ -13,6 +13,7 @@ namespace Toplib\GenericApi\Serializer;
 
 use GuzzleHttp\Message\MessageInterface;
 use JMS\Serializer\SerializerBuilder;
+use Toplib\GenericApi\ApiResponseInterface;
 
 /**
  * Class AbstractSerializerMessageParser
@@ -44,7 +45,12 @@ abstract class AbstractSerializerMessageParser implements MessageParserInterface
         if ($this->class) {
             $content = $message->getBody()->getContents();
 
-            return SerializerBuilder::create()->build()->deserialize($content, $this->class, $format);
+            $parsedResponse = SerializerBuilder::create()->build()->deserialize($content, $this->class, $format);
+            if ($parsedResponse instanceof ApiResponseInterface && !$parsedResponse->getRawResponse()) {
+                $parsedResponse->setRawResponse($content);
+            }
+
+            return $parsedResponse;
         } else {
             return null;
         }
