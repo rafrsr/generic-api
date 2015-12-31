@@ -106,7 +106,8 @@ $requestBuilder
         ->setCurlOption(CURLOPT_CAPATH,'/var/...')
         ...
 
-``````
+````
+
 To view all available options see the [guzzle documentation](http://docs.guzzlephp.org/en/latest/request-options.html).
 
 ### Create the public method in the API class
@@ -159,7 +160,7 @@ Validate service data before send the request to a remote server. Use Symfony va
 
 ````php
     /**
-     * @Assert\\NotBlank()
+     * @Assert\NotBlank()
      */
     private $postId;
 ````
@@ -168,7 +169,7 @@ Validations are triggered just before send the request to a remote server or moc
 
 ### Serialization
 
-Generic APi can use JMSSerializer to serialize/deserialize data when send and receive.
+Generic APi can use JMSSerializer to serialize/deserialize when send and receive data.
 
 ````php
    ...
@@ -178,6 +179,7 @@ Generic APi can use JMSSerializer to serialize/deserialize data when send and re
 ````
 
 In any case can use your custom parser
+
 ````php
  ...
    $requestBuilder
@@ -187,14 +189,13 @@ In any case can use your custom parser
 
 In case not set a response parser a native guzzle response will be returned
 
-````
-
 ### Mocking a service
 
 The mock is a optional when build the request in the service and emulate the HTTP layer without needing to send requests over the internet.
 Mocks are very useful to emulate responses for test environments, developing or refactoring the api implementation without need of send real requests.
 
 ````php
+
 use use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use Toplib\GenericApi\ApiMockInterface;
