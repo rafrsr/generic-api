@@ -11,11 +11,11 @@
 
 namespace Toplib\SampleApi\Services\CreatePost;
 
-use GuzzleHttp\Message\RequestInterface;
+use Guzzle\Http\QueryString;
+use GuzzleHttp\Psr7\Response;
 use JMS\Serializer\SerializerBuilder;
-use Toplib\GenericApi\ApiFactory;
+use Psr\Http\Message\RequestInterface;
 use Toplib\GenericApi\ApiMockInterface;
-use Toplib\GenericApi\Serializer\JsonMessageParser;
 use Toplib\SampleApi\Model\Post;
 
 /**
@@ -28,10 +28,14 @@ class CreatePostMock implements ApiMockInterface
      */
     public function mock(RequestInterface $request)
     {
-        /** @var Post $post */
-        $post = (new JsonMessageParser('Toplib\SampleApi\Model\Post'))->parse($request);
+        $body = $request->getBody()->getContents();
+        $bodyArray = QueryString::fromString($body);
+        $post = new Post();
         $post->setId(101);
+        $post->setTitle($bodyArray['title']);
+        $post->setUserId($bodyArray['userId']);
+        $post->setBody($bodyArray['body']);
 
-        return ApiFactory::createResponse(SerializerBuilder::create()->build()->serialize($post, 'json'));
+        return new Response(200, [], SerializerBuilder::create()->build()->serialize($post, 'json'));
     }
 }

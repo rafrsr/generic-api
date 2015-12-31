@@ -11,193 +11,49 @@
 
 namespace Toplib\GenericApi\Client;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJarInterface;
+use GuzzleHttp\RequestOptions as GuzzleRequestOptions;
+use Psr\Http\Message\StreamInterface;
 
 /**
- * This class can be used with Guzzle to create a
+ * Class RequestOptions
  */
-class HttpRequest implements HttpRequestInterface
+class RequestOptions
 {
-    /**
-     * @var string
-     */
-    private $method;
-
-    /**
-     * @var string
-     */
-    private $url;
 
     /**
      * @var array
      */
-    private $options;
+    private $options = [];
 
     /**
-     * Http Request
+     * RequestOptions constructor.
      *
-     * @param string $method  http method to use
-     * @param string $url     url to send the request
-     * @param array  $options array of guzzle request options
+     * @param array $options
      */
-    public function __construct($method, $url, $options = [])
+    public function __construct(array $options = [])
     {
-        $this->method = $method;
-        $this->url = $url;
         $this->options = $options;
     }
 
     /**
-     * @inheritdoc
-     */
-    public function send(array $clientConfig = [])
-    {
-        $client = new Client($clientConfig);
-
-        $guzzleRequest = $client->createRequest($this->getMethod(), $this->getUrl(), $this->getOptions());
-
-        return $client->send($guzzleRequest);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMethod()
-    {
-        return $this->method;
-    }
-
-    /**
-     * @param mixed $method
+     * Create new request options instance
      *
-     * @return $this
-     */
-    public function setMethod($method)
-    {
-        $this->method = $method;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param mixed $url
+     * RequestOptions::create()->SSLVerification(false);
      *
-     * @return $this
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * The body option is used to control the body of an entity enclosing request (e.g., PUT, POST, PATCH).
+     * @param array $options
      *
-     * @param mixed $body
-     *
-     * @return $this
+     * @return RequestOptions
      */
-    public function setBody($body)
+    public static function create(array $options = [])
     {
-        $this->options['body'] = $body;
-
-        return $this;
+        return new RequestOptions($options);
     }
-
-    /**
-     * @return mixed
-     */
-    public function getBody()
-    {
-        if (isset($this->options['body'])) {
-            return $this->options['body'];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param mixed $xml
-     *
-     * @return $this
-     */
-    public function setXML($xml)
-    {
-        $this->options['body'] = $xml;
-        $this->addHeader('Content-Type', 'text/xml; charset=utf-8');
-
-        return $this;
-    }
-
-    /**
-     * Associative array of headers to add to the request.
-     * Each key is the name of a header, and each value is a string or array of strings representing the header field values.
-     *
-     * @param array $headers array of headers
-     *
-     * @return $this
-     */
-    public function setHeaders($headers)
-    {
-        $this->options['headers'] = $headers;
-
-        return $this;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getHeaders()
-    {
-        if (isset($this->options['headers'])) {
-            return $this->options['headers'];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param $key
-     *
-     * @return null
-     */
-    public function getHeader($key)
-    {
-        if (isset($this->options['headers'][$key])) {
-            return $this->options['headers'][$key];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $name
-     * @param string $value
-     *
-     * @return $this
-     */
-    public function addHeader($name, $value)
-    {
-        $this->options['headers'][$name] = $value;
-
-        return $this;
-    }
-
 
     /**
      * @return array
      */
-    public function getOptions()
+    public function getAll()
     {
         return $this->options;
     }
@@ -210,7 +66,7 @@ class HttpRequest implements HttpRequestInterface
      *
      * @return $this
      */
-    public function setOptions(array $options)
+    public function setAll(array $options)
     {
         $this->options = $options;
 
@@ -227,9 +83,9 @@ class HttpRequest implements HttpRequestInterface
     public function setSSLKey($certificateFile, $password = null)
     {
         if ($password) {
-            $this->options['ssl_key'] = [$certificateFile, $password];
+            $this->options[GuzzleRequestOptions::SSL_KEY] = [$certificateFile, $password];
         } else {
-            $this->options['ssl_key'] = $certificateFile;
+            $this->options[GuzzleRequestOptions::SSL_KEY] = $certificateFile;
         }
     }
 
@@ -242,9 +98,9 @@ class HttpRequest implements HttpRequestInterface
     public function setCertificate($certificateFile, $password = null)
     {
         if ($password) {
-            $this->options['cert'] = [$certificateFile, $password];
+            $this->options[GuzzleRequestOptions::CERT] = [$certificateFile, $password];
         } else {
-            $this->options['cert'] = $certificateFile;
+            $this->options[GuzzleRequestOptions::CERT] = $certificateFile;
         }
     }
 
@@ -256,21 +112,68 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setCurlOption($curlConstant, $value)
     {
-        $this->options['config']['curl'][$curlConstant] = $value;
+        $this->options['curl'][$curlConstant] = $value;
 
         return $this;
     }
 
     /**
-     * Query string parameters
+     * Associative array of query string values to add
+     * to the request. This option uses PHP's http_build_query() to create
+     * the string representation. Pass a string value if you need more
+     * control than what this method provides
      *
-     * @param array $query
+     * @param array|string $query
      *
      * @return $this
      */
-    public function setQuery(array $query)
+    public function setQuery($query)
     {
-        $this->options['query'] = $query;
+        $this->options[GuzzleRequestOptions::QUERY] = $query;
+
+        return $this;
+    }
+
+    /**
+     * The body option is used to control the body of an entity enclosing request (e.g., PUT, POST, PATCH).
+     *
+     * @param string|StreamInterface $body
+     *
+     * @return $this
+     */
+    public function setBody($body)
+    {
+        $this->options[GuzzleRequestOptions::BODY] = $body;
+
+        return $this;
+    }
+
+    /**
+     * Associative array of headers to add to the request.
+     * Each key is the name of a header, and each value is a string or array of strings representing the header field values.
+     *
+     * @param array $headers
+     *
+     * @return $this
+     */
+    public function setHeaders(array $headers)
+    {
+        $this->options[GuzzleRequestOptions::HEADERS] = $headers;
+
+        return $this;
+    }
+
+    /**
+     * Headers to add to the request.
+     *
+     * @param $key
+     * @param $value
+     *
+     * @return $this
+     */
+    public function addHeader($key, $value)
+    {
+        $this->options[GuzzleRequestOptions::HEADERS][$key] = $value;
 
         return $this;
     }
@@ -285,7 +188,15 @@ class HttpRequest implements HttpRequestInterface
      */
     public function addQuery($param, $value)
     {
-        $this->options['query'][$param] = $value;
+        if (!isset($this->options[GuzzleRequestOptions::QUERY])) {
+            $this->options[GuzzleRequestOptions::QUERY] = [];
+        }
+
+        if (!is_array($this->options[GuzzleRequestOptions::QUERY])) {
+            throw  new \LogicException('The query has been set as string and can`t be modified');
+        }
+
+        $this->options[GuzzleRequestOptions::QUERY][$param] = $value;
 
         return $this;
     }
@@ -299,7 +210,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setCookies(CookieJarInterface $cookies)
     {
-        $this->options['cookies'] = $cookies;
+        $this->options[GuzzleRequestOptions::COOKIES] = $cookies;
 
         return $this;
     }
@@ -316,7 +227,25 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setDebug($bool)
     {
-        $this->options['debug'] = $bool;
+        $this->options[GuzzleRequestOptions::DEBUG] = $bool;
+
+        return $this;
+    }
+
+    /**
+     * Defines a function to invoke when transfer
+     * progress is made. The function accepts the following positional
+     * arguments: the total number of bytes expected to be downloaded, the
+     * number of bytes downloaded so far, the number of bytes expected to be
+     * uploaded, the number of bytes uploaded so far.
+     *
+     * @param callable $option
+     *
+     * @return $this
+     */
+    public function setProgress(callable $option)
+    {
+        $this->options[GuzzleRequestOptions::PROGRESS] = $option;
 
         return $this;
     }
@@ -335,7 +264,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setDecodeContent($option)
     {
-        $this->options['decode_content'] = $option;
+        $this->options[GuzzleRequestOptions::DECODE_CONTENT] = $option;
 
         return $this;
     }
@@ -363,7 +292,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setExpect($option)
     {
-        $this->options['expect'] = $option;
+        $this->options[GuzzleRequestOptions::EXPECT] = $option;
 
         return $this;
     }
@@ -380,10 +309,28 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setFormParams($option)
     {
-        $this->options['body'] = $option;
-        if (!$this->getHeader('Content-Type')) {
-            $this->addHeader('Content-Type', 'application/x-www-form-urlencoded');
-        }
+        $this->options[GuzzleRequestOptions::FORM_PARAMS] = $option;
+
+        return $this;
+    }
+
+    /**
+     * Sets the body of the request to a multipart/form-data form.
+     *
+     * The value of multipart is an array of associative arrays, each containing the following key value pairs:
+     *
+     * name: (string, required) the form field name
+     * contents: (StreamInterface/resource/string, required) The data to use in the form element.
+     * headers: (array) Optional associative array of custom headers to use with the form element.
+     * filename: (string) Optional string to send as the filename in the part.
+     *
+     * @param array $option
+     *
+     * @return $this
+     */
+    public function setMultipart(array $option)
+    {
+        $this->options[GuzzleRequestOptions::MULTIPART] = $option;
 
         return $this;
     }
@@ -398,7 +345,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setConnectTimeOut($option)
     {
-        $this->options['connect_timeout'] = $option;
+        $this->options[GuzzleRequestOptions::CONNECT_TIMEOUT] = $option;
 
         return $this;
     }
@@ -412,7 +359,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setTimeOut($option)
     {
-        $this->options['timeout'] = $option;
+        $this->options[GuzzleRequestOptions::TIMEOUT] = $option;
 
         return $this;
     }
@@ -427,7 +374,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setHttpErrors($option)
     {
-        $this->options['exceptions'] = $option;
+        $this->options[GuzzleRequestOptions::HTTP_ERRORS] = $option;
 
         return $this;
     }
@@ -442,7 +389,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setJson($option)
     {
-        $this->options['json'] = $option;
+        $this->options[GuzzleRequestOptions::JSON] = $option;
 
         return $this;
     }
@@ -456,7 +403,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setVersion($option)
     {
-        $this->options['version'] = $option;
+        $this->options[GuzzleRequestOptions::VERSION] = $option;
 
         return $this;
     }
@@ -481,7 +428,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function allowRedirects($option)
     {
-        $this->options['allow_redirects'] = $option;
+        $this->options[GuzzleRequestOptions::ALLOW_REDIRECTS] = $option;
 
         return $this;
     }
@@ -499,7 +446,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setStream($option)
     {
-        $this->options['stream'] = $option;
+        $this->options[GuzzleRequestOptions::STREAM] = $option;
 
         return $this;
     }
@@ -515,101 +462,104 @@ class HttpRequest implements HttpRequestInterface
      */
     public function SSLVerification($option)
     {
-        $this->options['verify'] = $option;
+        $this->options[GuzzleRequestOptions::VERIFY] = $option;
 
         return $this;
     }
 
     /**
-     * The save_to option specifies where the body of a response is downloaded.
-     * You can pass the path to a file, an fopen resource, or a Guzzle\Http\EntityBodyInterface object.
+     * Specify where the body of a response will be saved.
      *
-     * @param mixed $option
+     * @param string|StreamInterface $option
      *
      * @return $this
      */
-    public function saveTo($option)
+    public function saveResponseTo($option)
     {
-        $this->options['save_to'] = $option;
+        $this->options[GuzzleRequestOptions::SINK] = $option;
 
         return $this;
     }
 
     /**
-     * Array of event subscribers to add to the request.
-     * Each value in the array must be an instance of GuzzleHttp\Event\SubscriberInterface
+     * Set to true to inform HTTP handlers that you intend on waiting on the response.
+     * This can be useful for optimizations.
      *
-     * @param array $subscribers
+     * @param bool $option
      *
      * @return $this
      */
-    public function setSubscribers(array $subscribers)
+    public function setSynchronous($option)
     {
-        $this->options['subscribers'] = $subscribers;
+        $this->options[GuzzleRequestOptions::SYNCHRONOUS] = $option;
 
         return $this;
     }
 
     /**
-     * The events option makes it easy to attach listeners to the various events emitted by a request object
+     * The number of milliseconds to delay before sending the request.
      *
-     * Available events:
-     * - before
-     * - complete
-     * - error
-     * - progress
-     * - end
-     *
-     * @param string   $event    name of the event listen
-     * @param callable $closure  function to execute
-     * @param int      $priority event priority
-     * @param bool     $once     event should be triggered more than once.
+     * @param float|integer $option
      *
      * @return $this
      */
-    public function attachEventListener($event, $closure, $priority = null, $once = true)
+    public function setDelay($option)
     {
-        if ($priority || !$once) {
-            $closure = [
-                'fn' => $closure,
-                'priority' => $priority,
-                'once' => $once,
-            ];
-        }
-
-        $this->options['events'][$event][] = $closure;
+        $this->options[GuzzleRequestOptions::DELAY] = $option;
 
         return $this;
     }
 
-
     /**
-     * Specify an HTTP proxy
+     * A callable that is invoked when the HTTP headers of the response have been
+     * received but the body has not yet begun to download.
      *
-     * Guzzle will automatically populate this value with your environment's NO_PROXY environment variable.
-     * However, when providing a proxy request option, it is up to your to provide the no value parsed from
-     * the NO_PROXY environment variable (e.g., explode(',', getenv('NO_PROXY'))).
+     * The callable accepts a Psr\Http\ResponseInterface object.
+     * If an exception is thrown by the callable, then the promise associated with the response
+     * will be rejected with a GuzzleHttp\Exception\RequestException that wraps the exception that was thrown.
      *
-     * @param string  $host IP or name of the host,
-     *                      alternatively can set all params in the host
-     *                      (e.g. http://username:password@192.168.16.1:10)
-     * @param integer $port
-     * @param string  $username
-     * @param string  $password
+     * @param callable $option
      *
      * @return $this
      */
-    public function setProxy($host, $port = null, $username = null, $password = null)
+    public function onHeaders(callable $option)
     {
-        $proxy = $host;
-        if ($port || ($username && $password)) {
-            if ($username && $password) {
-                $proxy = "http://$username:$password@$host:$port";
-            } else {
-                $proxy = "http://$host:$port";
-            }
-        }
-        $this->options['proxy'] = $proxy;
+        $this->options[GuzzleRequestOptions::ON_HEADERS] = $option;
+
+        return $this;
+    }
+
+    /**
+     * Allows you to get access to transfer statistics of a request and access the lower level
+     * transfer details of the handler associated with your client.
+     * on_stats is a callable that is invoked when a handler has finished sending a request.
+     * The callback is invoked with transfer statistics about the request, the response received, or the error encountered.
+     * Included in the data is the total amount of time taken to send the request.
+     *
+     * @param callable $option
+     *
+     * @return $this
+     */
+    public function onStats(callable $option)
+    {
+        $this->options[GuzzleRequestOptions::ON_STATS] = $option;
+
+        return $this;
+    }
+
+    /**
+     * Pass a string to specify an HTTP proxy, or an array to specify different proxies for different protocols.
+     *
+     * Pass an associative array to specify HTTP proxies for specific URI schemes (i.e., "http", "https").
+     * Provide a no key value pair to provide a list of host names that should not be proxied to.
+     *
+     * @param string|array $proxy
+     *
+     * @return $this
+     */
+    public function setProxy($proxy)
+    {
+        $this->options[GuzzleRequestOptions::PROXY] = $proxy;
 
         return $this;
     }
@@ -627,7 +577,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setAuth($username, $password, $type = 'basic')
     {
-        $this->options['auth'] = [$username, $password, $type];
+        $this->options[GuzzleRequestOptions::AUTH] = [$username, $password, $type];
 
         return $this;
     }

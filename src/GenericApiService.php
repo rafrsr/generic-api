@@ -11,8 +11,6 @@
 
 namespace Toplib\GenericApi;
 
-use GuzzleHttp\Message\ResponseInterface;
-
 /**
  * This class cane be used to create a service without create the class file,
  * it's very helpful for scaffolding, tests or very small services.
@@ -20,7 +18,10 @@ use GuzzleHttp\Message\ResponseInterface;
  * ## Example
  *
  * $api = new GenericApi();
- * $request = ApiFactory::createRequest('get', 'http://example.org/post/1');
+ * $request = ApiRequestBuilder::create()
+ *   ->withMethod('get')
+ *   ->withUri('http://jsonplaceholder.typicode.com/posts/1')
+ *   ->getRequest();
  * $service = new GenericApiService($request);
  * $api->process($service);
  */
@@ -40,18 +41,13 @@ final class GenericApiService implements ApiServiceInterface
     }
 
     /**
-     * @inheritDoc
+     * Build the request to send
+     *
+     * @param ApiRequestBuilder $requestBuilder
+     * @param ApiInterface      $api
      */
-    public function getApiRequest(ApiInterface $api)
+    public function buildRequest(ApiRequestBuilder $requestBuilder, ApiInterface $api)
     {
-        return $this->request;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function parseResponse(ResponseInterface $response, ApiInterface $api)
-    {
-        return $response;
+        $requestBuilder->setRequest($this->request);
     }
 }

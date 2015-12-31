@@ -41,7 +41,6 @@ class SampleAPITest extends \PHPUnit_Framework_TestCase
 
         //filter by userId
         $posts = $this->api->posts()->getList(1);
-        //print_r($posts);
         $this->assertCount(10, $posts);
     }
 

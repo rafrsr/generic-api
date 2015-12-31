@@ -11,11 +11,9 @@
 
 namespace Toplib\SampleApi\Services\CreatePost;
 
-use GuzzleHttp\Message\ResponseInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Toplib\GenericApi\ApiInterface;
-use Toplib\GenericApi\Serializer\JsonMessageParser;
-use Toplib\SampleApi\SampleAPIRequest;
+use Toplib\GenericApi\ApiRequestBuilder;
 use Toplib\SampleApi\Services\UpdatePost\UpdatePost;
 
 /**
@@ -26,16 +24,13 @@ class CreatePost extends UpdatePost
     /**
      * @inheritDoc
      */
-    public function getApiRequest(ApiInterface $api)
+    public function buildRequest(ApiRequestBuilder $requestBuilder, ApiInterface $api)
     {
-        return new SampleAPIRequest('post', '/posts', $this->getPost(), new CreatePostMock());
-    }
+        parent::buildRequest($requestBuilder, $api);
 
-    /**
-     * @inheritDoc
-     */
-    public function parseResponse(ResponseInterface $response, ApiInterface $api)
-    {
-        return new JsonMessageParser('Toplib\SampleApi\Model\Post');
+        $requestBuilder
+            ->withMethod('POST')
+            ->withUri($this->buildServiceUrl('/posts/'))
+            ->withMock('Toplib\SampleApi\Services\CreatePost\CreatePostMock');
     }
 }

@@ -11,12 +11,13 @@
 
 namespace Toplib\GenericApi;
 
-use Toplib\GenericApi\Client\HttpRequest;
+use GuzzleHttp\Psr7\Request;
+use Toplib\GenericApi\Client\RequestOptions;
 
 /**
  * Class GenericRequest
  */
-class ApiRequest extends HttpRequest implements ApiRequestInterface
+class ApiRequest extends Request implements ApiRequestInterface
 {
 
     /**
@@ -25,19 +26,9 @@ class ApiRequest extends HttpRequest implements ApiRequestInterface
     private $mock;
 
     /**
-     * GenericApiRequest constructor.
-     *
-     * @param string           $method  http method to use
-     * @param string           $url     url to send the request
-     * @param array            $options array of guzzle request options
-     * @param ApiMockInterface $mock    instance of mock to use
+     * @var RequestOptions
      */
-    public function __construct($method, $url, $options = [], $mock = null)
-    {
-        parent::__construct($method, $url, $options);
-
-        $this->mock = $mock;
-    }
+    private $options;
 
     /**
      * @return ApiMockInterface|null
@@ -48,13 +39,43 @@ class ApiRequest extends HttpRequest implements ApiRequestInterface
     }
 
     /**
-     * @param ApiMockInterface|null $mock
+     * Set the mock to use to emulate responses
+     *
+     * @param ApiMockInterface $mock
      *
      * @return $this
      */
-    public function setMock($mock)
+    public function withMock(ApiMockInterface $mock)
     {
         $this->mock = $mock;
+
+        return $this;
+    }
+
+    /**
+     * @return RequestOptions
+     */
+    public function getOptions()
+    {
+        if (!$this->options) {
+            $this->options = new RequestOptions();
+        }
+
+        return $this->options;
+    }
+
+    /**
+     * @param array|RequestOptions $options
+     *
+     * @return $this
+     */
+    public function withOptions($options)
+    {
+        if (is_array($options)) {
+            $options = new RequestOptions($options);
+        }
+
+        $this->options = $options;
 
         return $this;
     }

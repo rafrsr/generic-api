@@ -11,17 +11,15 @@
 
 namespace Toplib\SampleApi\Services\GetPosts;
 
-use GuzzleHttp\Message\ResponseInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Toplib\GenericApi\ApiInterface;
-use Toplib\GenericApi\ApiServiceInterface;
-use Toplib\GenericApi\Serializer\JsonMessageParser;
-use Toplib\SampleApi\SampleAPIRequest;
+use Toplib\GenericApi\ApiRequestBuilder;
+use Toplib\SampleApi\Services\BasePostService;
 
 /**
  * Class GetPosts
  */
-class GetPosts implements ApiServiceInterface
+class GetPosts extends BasePostService
 {
     /**
      * @var int
@@ -61,22 +59,16 @@ class GetPosts implements ApiServiceInterface
     /**
      * @inheritDoc
      */
-    public function getApiRequest(ApiInterface $api)
+    public function buildRequest(ApiRequestBuilder $requestBuilder, ApiInterface $api)
     {
-        $request = new SampleAPIRequest('get', '/posts', null, new GetPostsMock());
+        $requestBuilder
+            ->withMethod('GET')
+            ->withUri($this->buildServiceUrl('/posts/'))
+            ->withJsonResponse('array<Toplib\SampleApi\Model\Post>')
+            ->withMock('Toplib\SampleApi\Services\GetPosts\GetPostsMock');
 
         if ($this->getUserId()) {
-            $request->addQuery('userId', $this->getUserId());
+            $requestBuilder->options()->addQuery('userId', $this->getUserId());
         }
-
-        return $request;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function parseResponse(ResponseInterface $response, ApiInterface $api)
-    {
-        return new JsonMessageParser('array<Toplib\SampleApi\Model\Post>');
     }
 }

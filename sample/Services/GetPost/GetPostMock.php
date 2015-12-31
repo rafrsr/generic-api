@@ -11,8 +11,8 @@
 
 namespace Toplib\SampleApi\Services\GetPost;
 
-use GuzzleHttp\Message\RequestInterface;
-use Toplib\GenericApi\ApiFactory;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
 use Toplib\GenericApi\ApiMockInterface;
 
 /**
@@ -25,6 +25,6 @@ class GetPostMock implements ApiMockInterface
      */
     public function mock(RequestInterface $request)
     {
-        return ApiFactory::createResponse(file_get_contents(__DIR__ . '/../../Fixtures/post1.json'));
+        return new Response(200, [], file_get_contents(__DIR__ . '/../../Fixtures/post1.json'));
     }
 }

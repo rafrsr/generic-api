@@ -11,12 +11,12 @@
 
 namespace Toplib\GenericApi;
 
-use GuzzleHttp\Message\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Class GenericApiMock
  */
-class GenericApiMock implements ApiMockInterface
+final class GenericApiMock implements ApiMockInterface
 {
     /**
      * @var callable

@@ -11,6 +11,7 @@
 
 namespace Toplib\GenericApi;
 
+use Psr\Http\Message\ResponseInterface;
 use Toplib\GenericApi\Exception\ApiException;
 
 /**
@@ -49,7 +50,7 @@ interface ApiInterface
      *
      * @param ApiServiceInterface $service
      *
-     * @return \GuzzleHttp\Message\ResponseInterface|mixed
+     * @return ResponseInterface|mixed
      * @throws ApiException if any other kind of error is happened before or after the request is sent
      */
     public function process(ApiServiceInterface $service);

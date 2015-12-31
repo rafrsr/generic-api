@@ -11,8 +11,8 @@
 
 namespace Toplib\GenericApi;
 
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Message\Response;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class MockInterface
@@ -27,7 +27,7 @@ interface ApiMockInterface
      *
      * @param RequestInterface $request
      *
-     * @return Response
+     * @return ResponseInterface
      */
     public function mock(RequestInterface $request);
 }

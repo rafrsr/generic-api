@@ -9,7 +9,6 @@
 
 API Abstraction layer with mocks.Connect to external API easy and follow some simple guidelines.
 
-
 Most APIs provide a SDK or API implementation library in parallel.
 But this not always true, or simply not made in our required language (php).
 For this cases is necessary implements the API from scratch.
@@ -17,6 +16,7 @@ GenericApi is solution to keep things organized and follow a similar pattern for
 
 ## Features
 
+- **Guzzle:** Use guzzle with psr7 for requests, responses, and streams.
 - **Mocks:** Emulate request and response for test environments
 - **Validation:** Use powerful symfony validations to validate a request before send to a server
 - **Connection Abstraction:** Only create the request, the connection is done automatically with guzzle, no more complicated curl connections.
@@ -81,20 +81,13 @@ class GetPost implements ApiServiceInterface
     /**
      * @inheritDoc
      */
-    public function getApiRequest(ApiInterface $api)
+    public function buildRequest(ApiRequestBuilder $requestBuilder, ApiInterface $api)
     {
-       $url = sprintf('http://jsonplaceholder.typicode.com/posts/%s', $this->getPostId());
-
-       return ApiFactory::createRequest('get', $url);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function parseResponse(ResponseInterface $response, ApiInterface $api)
-    {
-        return new JsonMessageParser('Toplib\\SampleApi\\Model\\Post');
-    }
+        $requestBuilder
+            ->withMethod('GET')
+            ->withUri(sprintf('http://jsonplaceholder.typicode.com/posts/%s', $this->getPostId()))
+            ->withMock('Toplib\SampleApi\Services\GetPost\GetPostMock')
+            ->withJsonResponse('Toplib\SampleApi\Model\Post');
 }
 ````
 
@@ -103,21 +96,21 @@ class GetPost implements ApiServiceInterface
 When create the request in the service can customize a lot of options to create advanced requests
 
 ````php
-$request =  ApiFactory::createRequest('get', $url);
 
-$request->SSLVerification(false)
+$requestBuilder
+        ->options()
+        ->SSLVerification(false)
         ->setJson(['post'=>['id'=>1]])
-        ->setAuth('username','password')
         ->setAuth('username','password')
         ->setCurlOption(CURLOPT_CAPATH,'/var/...')
         ...
 
 ``````
-To view all available options see the [guzzle documentation](http://docs.guzzlephp.org/en/5.3/clients.html#request-options).
+To view all available options see the [guzzle documentation](http://docs.guzzlephp.org/en/latest/request-options.html).
 
 ### Create the public method in the API class
 
-It's the user/developer end-point to use the api, you must create a way to call the service
+This is the user/developer end-point to use the api, you must create a way to call the service
 
 ````php
 /**
@@ -174,51 +167,37 @@ Validations are triggered just before send the request to a remote server or moc
 
 ### Serialization
 
-Can use jms/serializer or any other library to send/receive data.
+Generic APi can use JMSSerializer to serialize/deserialize data when send and receive.
 
 ````php
    ...
-   $xmlBody = SerializerBuilder::create()->build()->serialize($this, 'xml');
-   return ApiFactory::createRequest('post', $url, $xmlBody);
+  $requestBuilder
+              ->withJsonBody($data)
+              ->withJsonResponse('Toplib\SampleApi\Model\Post');
 ````
 
-In the `parseResponse` method of the service you receive a raw response from the server
+In any case can use your custom parser
 ````php
- public function parseResponse(ResponseInterface $response, ApiInterface $api)
+ ...
+   $requestBuilder
+               ->withCustomResponse(new CustomJsonParser());
 
 ````
-Can manage and return the response as you need. Or can use one of the following parsers:
 
-- JsonMessageParser
-- XMLMessageParser
+In case not set a response parser a native guzzle response will be returned
 
-The above parsers deserialize the responses automatically.
-
-##### Example:
-
-using `JsonMessageParser` (based on JMS\Serializer)
-````php
-return JsonMessageParser('Toplib\\SampleApi\\Model\\Post');
-````
-or manually
-````php
-$responseJson = $response->getBody()->getContents();
-$postArray = json_decode($responseJson, true);
-$post = new Post();
-$post->setId($postArray['id']);
-$post->setUserId($postArray['userId']);
-$post->setTitle($postArray['title']);
-$post->setBody($postArray['body']);
-
-return $post;
 ````
 
 ### Mocking a service
 
-The mock is a optional param when create a api request in the service and emulate the HTTP layer without needing to send requests over the internet.
-Mocks are very useful to emulate responses for test environments, developing or refactoring the api without need of send real requests.
+The mock is a optional when build the request in the service and emulate the HTTP layer without needing to send requests over the internet.
+Mocks are very useful to emulate responses for test environments, developing or refactoring the api implementation without need of send real requests.
 
 ````php
+use use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
+use Toplib\GenericApi\ApiMockInterface;
+
 /**
  * Class GetPostMock
  */
@@ -236,7 +215,7 @@ class GetPostMock implements ApiMockInterface
             'body' => 'quia et suscipit suscipit recusandae consequuntur expedita ...',
         ];
 
-        return ApiFactory::createResponse(json_encode($post, 1));
+        return new Response(200, [], json_encode($post, 1));
     }
 }
 
@@ -245,7 +224,8 @@ class GetPostMock implements ApiMockInterface
 should be settled when create the request in the service
 
 ````php
-    return ApiFactory::createRequest('get', $url, [], [], new GetPostMock());
+    $requestBuilder
+                ->withMock('Toplib\SampleApi\Services\GetPost\GetPostMock')
 ````
 
 and change the mode of your API
@@ -262,7 +242,10 @@ Without the need of create a class for that service.
 ````php
 $api = new GenericApi(ApiInterface::MODE_LIVE);
 
-$request = ApiFactory::createRequest('get', 'http://jsonplaceholder.typicode.com/posts/1');
+$request = ApiRequestBuilder::create()
+    ->withMethod('get')
+    ->withUri('http://jsonplaceholder.typicode.com/posts/1')
+    ->getRequest();
 $service = new GenericApiService($request);
 $response = $api->process($service);
 ````
@@ -271,8 +254,6 @@ Below the same example but mocking the response. Generic mock can be created usi
 
 ````php
 $api = new GenericApi(ApiInterface::MODE_MOCK);
-
-$request = ApiFactory::createRequest('get', 'http://jsonplaceholder.typicode.com/posts/1');
 
 $mockCallback = function (RequestInterface $request) {
     $post = [
@@ -284,7 +265,12 @@ $mockCallback = function (RequestInterface $request) {
 
     return ApiFactory::createResponse(json_encode($post, 1));
 };
-$request->setMock(new GenericApiMock($mockCallback));
+
+$request = ApiRequestBuilder::create()
+    ->withMethod('get')
+    ->withUri('http://jsonplaceholder.typicode.com/posts/1')
+    ->withMock(new GenericApiMock($mockCallback))
+    ->getRequest();
 
 $service = new GenericApiService($request);
 $response = $api->process($service);

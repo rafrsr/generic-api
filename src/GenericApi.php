@@ -11,14 +11,13 @@
 
 namespace Toplib\GenericApi;
 
-use GuzzleHttp\Message\MessageFactory;
-use GuzzleHttp\Utils;
+use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validation;
-use Toplib\GenericApi\Client\MockAdapter;
+use Toplib\GenericApi\Client\MockHandler;
 use Toplib\GenericApi\Exception\ApiException;
 use Toplib\GenericApi\Exception\ApiInvalidDataException;
-use Toplib\GenericApi\Serializer\MessageParserInterface;
 
 /**
  * Class GenericApi
@@ -39,14 +38,6 @@ class GenericApi implements ApiInterface
     public function __construct($mode = self::MODE_LIVE)
     {
         $this->mode = $mode;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isModeSandBox()
-    {
-        return $this->getMode() == $this::MODE_SANDBOX;
     }
 
     /**
@@ -72,6 +63,14 @@ class GenericApi implements ApiInterface
     /**
      * @return bool
      */
+    public function isModeSandBox()
+    {
+        return $this->getMode() == $this::MODE_SANDBOX;
+    }
+
+    /**
+     * @return bool
+     */
     public function isModeLive()
     {
         return $this->getMode() == $this::MODE_LIVE;
@@ -92,42 +91,54 @@ class GenericApi implements ApiInterface
     {
         $this->validate($service);
 
-        $request = $service->getApiRequest($this);
+        $requestBuilder = new ApiRequestBuilder();
+        $service->buildRequest($requestBuilder, $this);
 
-        $httpResponse = $this->sendRequest($request);
+        $httpResponse = $this->sendRequest($requestBuilder->getRequest());
 
-        $response = $service->parseResponse($httpResponse, $this);
-
-        if ($response instanceof MessageParserInterface) {
-            return $response->parse($httpResponse);
-        } else {
-            return $response;
+        if ($responseParser = $requestBuilder->getResponseParser()) {
+            if ($newResponse = $responseParser->parse($httpResponse)) {
+                return $newResponse;
+            }
         }
+
+        return $httpResponse;
     }
 
     /**
      * @param ApiRequestInterface $request
      *
-     * @return \GuzzleHttp\Message\FutureResponse|\GuzzleHttp\Message\ResponseInterface|\GuzzleHttp\Ring\Future\FutureInterface|null
+     * @return ResponseInterface
      * @throws ApiException
      */
     protected function sendRequest(ApiRequestInterface $request)
     {
-        $clientConfig = [];
+        $clientOptions = [];
 
         //add mock to client config
         if ($this->isModeMock()) {
-            $mock = new MockAdapter(Utils::getDefaultHandler(), new MessageFactory());
-
             if ($request->getMock()) {
-                $mock->setApiServiceMock($request->getMock());
-                $clientConfig['fsm'] = $mock;
+                $mockHandler = new MockHandler($request->getMock());
+                $clientOptions['handler'] = $mockHandler;
             } else {
-                throw new ApiException('The service can\'t be mocked, should be create a valid mock for this service.');
+                throw new ApiException('The service can\'t be mocked, should create a valid mock for this service.');
             }
         }
 
-        return $request->send($clientConfig);
+        return $this->buildClient($clientOptions)->send($request, $request->getOptions()->getAll());
+    }
+
+    /**
+     * Build a guzzle client,
+     * override if is needed more specific client
+     *
+     * @param $clientOptions
+     *
+     * @return Client
+     */
+    protected function buildClient($clientOptions)
+    {
+        return new Client($clientOptions);
     }
 
     /**

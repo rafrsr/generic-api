@@ -11,11 +11,10 @@
 
 namespace Toplib\GenericApi\Client;
 
-use GuzzleHttp\Event\BeforeEvent;
-use GuzzleHttp\Event\CompleteEvent;
-use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\RequestFsm;
-use GuzzleHttp\Transaction;
+use GuzzleHttp\Promise\FulfilledPromise;
+use GuzzleHttp\Promise\PromiseInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Toplib\GenericApi\ApiMockInterface;
 
 /**
@@ -25,7 +24,7 @@ use Toplib\GenericApi\ApiMockInterface;
  * with the request as first argument.
  * The response of the fake method should be Response object with similar body to the original api response.
  */
-class MockAdapter extends RequestFsm
+class MockHandler
 {
     /**
      * @var ApiMockInterface
@@ -33,34 +32,31 @@ class MockAdapter extends RequestFsm
     private $mock;
 
     /**
+     * MockHandler constructor.
+     *
      * @param ApiMockInterface $mock
      */
-    public function setApiServiceMock(ApiMockInterface $mock)
+    public function __construct(ApiMockInterface $mock)
     {
         $this->mock = $mock;
     }
 
     /**
-     * @param Transaction $trans
+     *  __invoke
      *
-     * @return \GuzzleHttp\Message\Response|ResponseInterface|null
+     * @param RequestInterface $request
+     * @param array            $options
+     *
+     * @return PromiseInterface
      * @throws \Exception
      */
-    public function __invoke(Transaction $trans)
+    public function __invoke(RequestInterface $request, array $options)
     {
-        $trans->request->getEmitter()->emit('before', new BeforeEvent($trans));
-        if ($response = $trans->response) {
-            return $response;
-        }
-
-        $response = $this->mock->mock($trans->request);
+        $response = $this->mock->mock($request);
         if (!$response instanceof ResponseInterface) {
-            throw new \Exception('Invalid mock response');
+            throw new \Exception('Invalid mock response, should return a ResponseInterface object instance.');
         }
 
-        $trans->response = $response;
-        $trans->request->getEmitter()->emit('complete', new CompleteEvent($trans));
-
-        return $trans->response;
+        return new FulfilledPromise($response);
     }
 }

@@ -11,7 +11,7 @@
 
 namespace Toplib\GenericApi\Serializer;
 
-use GuzzleHttp\Message\MessageInterface;
+use Psr\Http\Message\MessageInterface;
 
 /**
  * Class XMLMessageParser

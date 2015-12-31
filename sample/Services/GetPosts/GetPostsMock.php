@@ -11,9 +11,10 @@
 
 namespace Toplib\SampleApi\Services\GetPosts;
 
-use GuzzleHttp\Message\RequestInterface;
+use Guzzle\Http\QueryString;
+use GuzzleHttp\Psr7\Response;
 use JMS\Serializer\SerializerBuilder;
-use Toplib\GenericApi\ApiFactory;
+use Psr\Http\Message\RequestInterface;
 use Toplib\GenericApi\ApiMockInterface;
 use Toplib\GenericApi\Serializer\JsonMessageParser;
 use Toplib\SampleApi\Model\Post;
@@ -29,9 +30,9 @@ class GetPostsMock implements ApiMockInterface
     public function mock(RequestInterface $request)
     {
         $json = file_get_contents(__DIR__ . '/../../Fixtures/posts.json');
-        $userId = $request->getQuery()->get('userId');
+        $userId = QueryString::fromString($request->getUri()->getQuery())->get('userId');
 
-        $response = ApiFactory::createResponse($json);
+        $response = new Response(200, [], $json);
 
         //filter
         if ($userId) {
@@ -44,9 +45,8 @@ class GetPostsMock implements ApiMockInterface
                 }
             }
 
-            $response = ApiFactory::createResponse(SerializerBuilder::create()->build()->serialize($filteredPosts, 'json'));
+            $response = new Response(200, [], SerializerBuilder::create()->build()->serialize($filteredPosts, 'json'));
         }
-
 
         return $response;
     }

@@ -11,8 +11,9 @@
 
 namespace Toplib\GenericApi\Tests;
 
-use Toplib\GenericApi\ApiFactory;
+use GuzzleHttp\Psr7\Response;
 use Toplib\GenericApi\ApiInterface;
+use Toplib\GenericApi\ApiRequestBuilder;
 use Toplib\GenericApi\GenericApi;
 use Toplib\GenericApi\GenericApiMock;
 use Toplib\GenericApi\GenericApiService;
@@ -37,12 +38,15 @@ class GenericApiTest extends \PHPUnit_Framework_TestCase
     {
         $api = new GenericApi(ApiInterface::MODE_MOCK); //can use MODE_LIVE
 
-        $request = ApiFactory::createRequest('get', 'http://jsonplaceholder.typicode.com/posts/1');
-
         $mockCallback = function () {
-            return ApiFactory::createResponse(file_get_contents(__DIR__ . '/../sample/Fixtures/post1.json'));
+            return new Response(200, [], file_get_contents(__DIR__ . '/../sample/Fixtures/post1.json'));
         };
-        $request->setMock(new GenericApiMock($mockCallback));
+
+        $request = ApiRequestBuilder::create()
+            ->withMethod('get')
+            ->withUri('http://jsonplaceholder.typicode.com/posts/1')
+            ->withMock(new GenericApiMock($mockCallback))
+            ->getRequest();
 
         $service = new GenericApiService($request);
         $response = $api->process($service);

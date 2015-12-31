@@ -11,9 +11,7 @@
 
 namespace Toplib\GenericApi\Tests\Serializer;
 
-
-use GuzzleHttp\Message\Request;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Psr7\Request;
 use Toplib\GenericApi\Serializer\JsonMessageParser;
 use Toplib\SampleApi\Model\Post;
 
@@ -22,7 +20,7 @@ class JsonMessageParserTest extends \PHPUnit_Framework_TestCase
     public function testParseNative()
     {
         $message = '{"id":1,"title":"lorem"}';
-        $request = new Request('get', '/', [], Stream::factory($message));
+        $request = new Request('get', '/', [], $message);
 
         $parser = new JsonMessageParser();
         $array = $parser->parse($request);
@@ -32,7 +30,7 @@ class JsonMessageParserTest extends \PHPUnit_Framework_TestCase
     public function testParseSerializer()
     {
         $message = '{"id":1,"title":"lorem"}';
-        $request = new Request('get', '/', [], Stream::factory($message));
+        $request = new Request('get', '/', [], $message);
 
         /** @var Post $post */
         $parser = new JsonMessageParser(new Post());

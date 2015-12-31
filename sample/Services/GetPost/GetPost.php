@@ -11,17 +11,15 @@
 
 namespace Toplib\SampleApi\Services\GetPost;
 
-use GuzzleHttp\Message\ResponseInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Toplib\GenericApi\ApiInterface;
-use Toplib\GenericApi\ApiServiceInterface;
-use Toplib\GenericApi\Serializer\JsonMessageParser;
-use Toplib\SampleApi\SampleAPIRequest;
+use Toplib\GenericApi\ApiRequestBuilder;
+use Toplib\SampleApi\Services\BasePostService;
 
 /**
  * Class GetPost
  */
-class GetPost implements ApiServiceInterface
+class GetPost extends BasePostService
 {
 
     /**
@@ -62,18 +60,12 @@ class GetPost implements ApiServiceInterface
     /**
      * @inheritDoc
      */
-    public function getApiRequest(ApiInterface $api)
+    public function buildRequest(ApiRequestBuilder $requestBuilder, ApiInterface $api)
     {
-        $url = sprintf('/posts/%s', $this->getPostId());
-
-        return new SampleAPIRequest('get', $url, null, new GetPostMock());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function parseResponse(ResponseInterface $response, ApiInterface $api)
-    {
-        return new JsonMessageParser('Toplib\SampleApi\Model\Post');
+        $requestBuilder
+            ->withMethod('GET')
+            ->withUri($this->buildServiceUrl('/posts/%s', [$this->getPostId()]))
+            ->withMock('Toplib\SampleApi\Services\GetPost\GetPostMock')
+            ->withJsonResponse('Toplib\SampleApi\Model\Post');
     }
 }

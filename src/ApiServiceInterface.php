@@ -11,29 +11,18 @@
 
 namespace Toplib\GenericApi;
 
-use GuzzleHttp\Message\ResponseInterface;
-
 /**
  * Class GenericApiServices
  */
 interface ApiServiceInterface
 {
     /**
-     * Generate the request for current service
+     * Build the request to send
      *
-     * @param ApiInterface $api
-     *
-     * @return ApiRequestInterface
-     */
-    public function getApiRequest(ApiInterface $api);
-
-    /**
-     * Parse and normalize the response of service
-     *
-     * @param ResponseInterface $response
+     * @param ApiRequestBuilder $requestBuilder
      * @param ApiInterface      $api
      *
-     * @return mixed
+     * @return
      */
-    public function parseResponse(ResponseInterface $response, ApiInterface $api);
+    public function buildRequest(ApiRequestBuilder $requestBuilder, ApiInterface $api);
 }

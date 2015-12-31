@@ -11,18 +11,17 @@
 
 namespace Toplib\SampleApi\Services\UpdatePost;
 
-use GuzzleHttp\Message\ResponseInterface;
+use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\Validator\Constraints as Assert;
 use Toplib\GenericApi\ApiInterface;
-use Toplib\GenericApi\ApiServiceInterface;
-use Toplib\GenericApi\Serializer\JsonMessageParser;
+use Toplib\GenericApi\ApiRequestBuilder;
 use Toplib\SampleApi\Model\Post;
-use Toplib\SampleApi\SampleAPIRequest;
+use Toplib\SampleApi\Services\BasePostService;
 
 /**
  * Class UpdatePost
  */
-class UpdatePost implements ApiServiceInterface
+class UpdatePost extends BasePostService
 {
 
     /**
@@ -65,18 +64,13 @@ class UpdatePost implements ApiServiceInterface
     /**
      * @inheritDoc
      */
-    public function getApiRequest(ApiInterface $api)
+    public function buildRequest(ApiRequestBuilder $requestBuilder, ApiInterface $api)
     {
-        $url = sprintf('/posts/%s', $this->getPost()->getId());
-
-        return new SampleAPIRequest('put', $url, $this->getPost(), new UpdatePostMock());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function parseResponse(ResponseInterface $response, ApiInterface $api)
-    {
-        return new JsonMessageParser('Toplib\SampleApi\Model\Post');
+        $requestBuilder
+            ->withMethod('PUT')
+            ->withUri($this->buildServiceUrl('/posts/%s', [$this->getPost()->getId()]))
+            ->withJsonResponse('Toplib\SampleApi\Model\Post')
+            ->withMock('Toplib\SampleApi\Services\UpdatePost\UpdatePostMock')
+            ->options()->setFormParams(json_decode(SerializerBuilder::create()->build()->serialize($this->post, 'json'), true));
     }
 }

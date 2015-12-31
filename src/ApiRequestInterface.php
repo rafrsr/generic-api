@@ -11,18 +11,42 @@
 
 namespace Toplib\GenericApi;
 
-use Toplib\GenericApi\Client\HttpRequestInterface;
+use Psr\Http\Message\RequestInterface;
+use Toplib\GenericApi\Client\RequestOptions;
 
 /**
  * Interface ApiRequestInterface
  *
  * This interface is used to generate a valid guzzle http request
  */
-interface ApiRequestInterface extends HttpRequestInterface
+interface ApiRequestInterface extends RequestInterface
 {
 
     /**
      * @return ApiMockInterface
      */
     public function getMock();
+
+    /**
+     * Set the mock to use to emulate responses
+     *
+     * @param ApiMockInterface|null $mock
+     *
+     * @return $this
+     */
+    public function withMock(ApiMockInterface $mock);
+
+    /**
+     * @return RequestOptions
+     */
+    public function getOptions();
+
+    /**
+     * Options to use with guzzle when send the request
+     *
+     * @param array|RequestOptions $options
+     *
+     * @return $this
+     */
+    public function withOptions($options);
 }

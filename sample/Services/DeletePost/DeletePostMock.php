@@ -11,8 +11,8 @@
 
 namespace Toplib\SampleApi\Services\DeletePost;
 
-use GuzzleHttp\Message\RequestInterface;
-use Toplib\GenericApi\ApiFactory;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
 use Toplib\GenericApi\ApiMockInterface;
 
 /**
@@ -25,6 +25,6 @@ class DeletePostMock implements ApiMockInterface
      */
     public function mock(RequestInterface $request)
     {
-        return ApiFactory::createResponse('');
+        return new Response(200);
     }
 }

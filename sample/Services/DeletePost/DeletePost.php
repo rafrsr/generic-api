@@ -11,10 +11,9 @@
 
 namespace Toplib\SampleApi\Services\DeletePost;
 
-use GuzzleHttp\Message\ResponseInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Toplib\GenericApi\ApiInterface;
-use Toplib\SampleApi\SampleAPIRequest;
+use Toplib\GenericApi\ApiRequestBuilder;
 use Toplib\SampleApi\Services\UpdatePost\UpdatePost;
 
 /**
@@ -22,21 +21,15 @@ use Toplib\SampleApi\Services\UpdatePost\UpdatePost;
  */
 class DeletePost extends UpdatePost
 {
-    /**
-     * @inheritDoc
-     */
-    public function getApiRequest(ApiInterface $api)
-    {
-        $url = sprintf('/posts/%s', $this->getPost()->getId());
-
-        return new SampleAPIRequest('delete', $url, null, new DeletePostMock());
-    }
 
     /**
      * @inheritDoc
      */
-    public function parseResponse(ResponseInterface $response, ApiInterface $api)
+    public function buildRequest(ApiRequestBuilder $requestBuilder, ApiInterface $api)
     {
-        return $response;
+        $requestBuilder
+            ->withMethod('DELETE')
+            ->withUri($this->buildServiceUrl('/posts/%s', [$this->getPost()->getId()]))
+            ->withMock('Toplib\SampleApi\Services\DeletePost\DeletePostMock');
     }
 }

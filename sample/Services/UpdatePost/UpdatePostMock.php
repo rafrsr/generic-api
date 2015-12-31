@@ -11,8 +11,10 @@
 
 namespace Toplib\SampleApi\Services\UpdatePost;
 
-use GuzzleHttp\Message\RequestInterface;
-use Toplib\GenericApi\ApiFactory;
+use Guzzle\Http\QueryString;
+use GuzzleHttp\Psr7\Response;
+use JMS\Serializer\SerializerBuilder;
+use Psr\Http\Message\RequestInterface;
 use Toplib\GenericApi\ApiMockInterface;
 
 /**
@@ -25,6 +27,14 @@ class UpdatePostMock implements ApiMockInterface
      */
     public function mock(RequestInterface $request)
     {
-        return ApiFactory::createResponse($request->getBody()->getContents());
+        $json = file_get_contents(__DIR__ . '/../../Fixtures/post1.json');
+        $post = SerializerBuilder::create()->build()->deserialize($json, 'Toplib\SampleApi\Model\Post', 'json');
+        $body = $request->getBody()->getContents();
+        $bodyArray = QueryString::fromString($body);
+        $post->setTitle($bodyArray['title']);
+        $post->setUserId($bodyArray['userId']);
+        $post->setBody($bodyArray['body']);
+
+        return new Response(200, [], SerializerBuilder::create()->build()->serialize($post, 'json'));
     }
 }
