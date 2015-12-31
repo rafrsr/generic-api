@@ -88,6 +88,7 @@ class GetPost implements ApiServiceInterface
             ->withUri(sprintf('http://jsonplaceholder.typicode.com/posts/%s', $this->getPostId()))
             ->withMock('Toplib\SampleApi\Services\GetPost\GetPostMock')
             ->withJsonResponse('Toplib\SampleApi\Model\Post');
+    }
 }
 ````
 
