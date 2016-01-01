@@ -49,7 +49,6 @@ Should return a valid `ApiRequest` in the method `getApiRequest` and should pars
 The response can vary depending of your needs.
 
 ````php
-use Toplib\GenericApi\ApiFactory;
 use Toplib\GenericApi\ApiServiceInterface;
 use Toplib\GenericApi\Serializer\JsonMessageParser;
 
@@ -265,7 +264,7 @@ $mockCallback = function (RequestInterface $request) {
         'body' => 'quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae ut ut quas totam nostrum rerum est autem sunt rem eveniet architecto',
     ];
 
-    return ApiFactory::createResponse(json_encode($post, 1));
+    return new Response(200, [], json_encode($post, 1));
 };
 
 $request = ApiRequestBuilder::create()
