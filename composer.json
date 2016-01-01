@@ -11,6 +11,14 @@
       "homepage": "https://github.com/rafrsr"
     }
   ],
+  "support": {
+    "wiki": "https://github.com/toplib/generic-api/wiki"
+  },
+  "keywords": [
+    "api",
+    "sdk",
+    "guzzle"
+  ],
   "autoload": {
     "files": [
       "autoload.php"
