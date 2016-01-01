@@ -17,7 +17,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validation;
 use Toplib\GenericApi\Client\MockHandler;
 use Toplib\GenericApi\Exception\ApiException;
-use Toplib\GenericApi\Exception\ApiInvalidDataException;
+use Toplib\GenericApi\Exception\InvalidApiDataException;
 
 /**
  * Class GenericApi
@@ -146,7 +146,7 @@ class GenericApi implements ApiInterface
      *
      * @param ApiServiceInterface $service
      *
-     * @throws ApiInvalidDataException
+     * @throws InvalidApiDataException
      */
     protected function validate(ApiServiceInterface $service)
     {
@@ -158,7 +158,7 @@ class GenericApi implements ApiInterface
             if ($violation->getPropertyPath()) {
                 $errorMessage = sprintf('Error in field "%s": ', $violation->getPropertyPath()) . $errorMessage;
             }
-            throw new ApiInvalidDataException($errorMessage);
+            throw new InvalidApiDataException($errorMessage);
         }
     }
 }

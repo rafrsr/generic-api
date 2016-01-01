@@ -12,9 +12,9 @@
 namespace Toplib\GenericApi\Exception;
 
 /**
- * Class ApiInvalidDataException
+ * Class InvalidApiDataException
  */
-class ApiInvalidDataException extends ApiException
+class InvalidApiDataException extends ApiException
 {
 
 }
