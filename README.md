@@ -7,7 +7,7 @@
 [![Total Downloads](https://poser.pugx.org/toplib/generic-api/downloads)](https://packagist.org/packages/toplib/generic-api)
 [![License](https://poser.pugx.org/toplib/generic-api/license)](https://packagist.org/packages/toplib/generic-api)
 
-API Abstraction layer with mocks.Connect to external API easy and follow some simple guidelines.
+API Abstraction layer with mocks. Tools for creating structured SDKs or API implementations easy and following some simple guidelines.
 
 Most APIs provide a SDK or API implementation library in parallel.
 But this not always true, or simply not made in our required language (php).
