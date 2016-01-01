@@ -155,7 +155,8 @@ But use a public method is very easy
 
 ### Validation
 
-Validate service data before send the request to a remote server. Use Symfony validation annotations.
+Validate service data before send the request to a remote server. 
+Use Symfony validation annotations inside the service.
 
 ````php
     /**
