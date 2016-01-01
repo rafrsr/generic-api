@@ -581,4 +581,27 @@ class RequestOptions
 
         return $this;
     }
+
+    /**
+     * Set an option manually
+     *
+     * @param $option
+     * @param $value
+     */
+    public function set($option, $value)
+    {
+        $this->options[$option] = $value;
+    }
+
+    /**
+     * Get a option value
+     *
+     * @param $option
+     *
+     * @return null
+     */
+    public function get($option)
+    {
+        return (isset($this->options[$option]) ? $this->options[$option] : null);
+    }
 }
