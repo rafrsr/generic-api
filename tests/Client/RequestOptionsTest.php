@@ -154,6 +154,13 @@ class RequestOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['user' => 1], $this->getOption(GuzzleRequestOptions::FORM_PARAMS));
     }
 
+    public function testAddFormParams()
+    {
+        $this->options->addFormParam('user', 'username');
+        $this->options->addFormParam('pass', 12345);
+        $this->assertEquals(['user' => 'username', 'pass' => 12345], $this->getOption(GuzzleRequestOptions::FORM_PARAMS));
+    }
+
     public function testSetConnectionTimeOut()
     {
         $this->options->setConnectTimeOut(30);
