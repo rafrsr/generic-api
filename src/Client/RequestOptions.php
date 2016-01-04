@@ -315,6 +315,23 @@ class RequestOptions
     }
 
     /**
+     * Used to send an application/x-www-form-urlencoded POST request.
+     *
+     * Add new form param to the list of existent params
+     *
+     * @param $name
+     * @param $value
+     *
+     * @return $this
+     */
+    public function addFormParam($name, $value)
+    {
+        $this->options[GuzzleRequestOptions::FORM_PARAMS][$name] = $value;
+
+        return $this;
+    }
+
+    /**
      * Sets the body of the request to a multipart/form-data form.
      *
      * The value of multipart is an array of associative arrays, each containing the following key value pairs:
