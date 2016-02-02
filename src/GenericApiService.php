@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi;
+namespace Rafrsr\GenericApi;
 
 /**
  * This class cane be used to create a service without create the class file,

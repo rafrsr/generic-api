@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi;
+namespace Rafrsr\SampleApi;
 
-use Toplib\GenericApi\GenericApi;
-use Toplib\SampleApi\Services\PostsServices;
+use Rafrsr\GenericApi\GenericApi;
+use Rafrsr\SampleApi\Services\PostsServices;
 
 /**
  * Class SampleAPI

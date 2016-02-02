@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi\Exception;
+namespace Rafrsr\GenericApi\Exception;
 
 /**
  * Class InvalidApiDataException

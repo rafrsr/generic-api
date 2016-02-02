@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services\GetPosts;
+namespace Rafrsr\SampleApi\Services\GetPosts;
 
 use Guzzle\Http\QueryString;
 use GuzzleHttp\Psr7\Response;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Http\Message\RequestInterface;
-use Toplib\GenericApi\ApiMockInterface;
-use Toplib\GenericApi\Serializer\JsonMessageParser;
-use Toplib\SampleApi\Model\Post;
+use Rafrsr\GenericApi\ApiMockInterface;
+use Rafrsr\GenericApi\Serializer\JsonMessageParser;
+use Rafrsr\SampleApi\Model\Post;
 
 /**
  * Class GetPostsMock
@@ -37,7 +37,7 @@ class GetPostsMock implements ApiMockInterface
         //filter
         if ($userId) {
             /** @var Post[] $posts */
-            $posts = (new JsonMessageParser('array<Toplib\SampleApi\Model\Post>'))->parse($response);
+            $posts = (new JsonMessageParser('array<Rafrsr\SampleApi\Model\Post>'))->parse($response);
             $filteredPosts = [];
             foreach ($posts as $post) {
                 if ($post->getUserId() == $userId) {

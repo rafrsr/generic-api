@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services\UpdatePost;
+namespace Rafrsr\SampleApi\Services\UpdatePost;
 
 use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\Validator\Constraints as Assert;
-use Toplib\GenericApi\ApiInterface;
-use Toplib\GenericApi\ApiRequestBuilder;
-use Toplib\SampleApi\Model\Post;
-use Toplib\SampleApi\Services\BasePostService;
+use Rafrsr\GenericApi\ApiInterface;
+use Rafrsr\GenericApi\ApiRequestBuilder;
+use Rafrsr\SampleApi\Model\Post;
+use Rafrsr\SampleApi\Services\BasePostService;
 
 /**
  * Class UpdatePost
@@ -69,8 +69,8 @@ class UpdatePost extends BasePostService
         $requestBuilder
             ->withMethod('PUT')
             ->withUri($this->buildServiceUrl('/posts/%s', [$this->getPost()->getId()]))
-            ->withJsonResponse('Toplib\SampleApi\Model\Post')
-            ->withMock('Toplib\SampleApi\Services\UpdatePost\UpdatePostMock')
+            ->withJsonResponse('Rafrsr\SampleApi\Model\Post')
+            ->withMock('Rafrsr\SampleApi\Services\UpdatePost\UpdatePostMock')
             ->options()->setFormParams(json_decode(SerializerBuilder::create()->build()->serialize($this->post, 'json'), true));
     }
 }

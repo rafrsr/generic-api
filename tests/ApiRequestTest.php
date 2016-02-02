@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi\Tests;
+namespace Rafrsr\GenericApi\Tests;
 
-use Toplib\GenericApi\ApiRequest;
-use Toplib\GenericApi\Client\RequestOptions;
-use Toplib\SampleApi\Services\GetPost\GetPostMock;
+use Rafrsr\GenericApi\ApiRequest;
+use Rafrsr\GenericApi\Client\RequestOptions;
+use Rafrsr\SampleApi\Services\GetPost\GetPostMock;
 
 class ApiRequestTest extends \PHPUnit_Framework_TestCase
 {

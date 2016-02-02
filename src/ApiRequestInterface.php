@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi;
+namespace Rafrsr\GenericApi;
 
 use Psr\Http\Message\RequestInterface;
-use Toplib\GenericApi\Client\RequestOptions;
+use Rafrsr\GenericApi\Client\RequestOptions;
 
 /**
  * Interface ApiRequestInterface

@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi\Tests\Client;
+namespace Rafrsr\GenericApi\Tests\Client;
 
 use GuzzleHttp\Cookie\CookieJar;
-use Toplib\GenericApi\Client\RequestOptions;
+use Rafrsr\GenericApi\Client\RequestOptions;
 use GuzzleHttp\RequestOptions as GuzzleRequestOptions;
 
 class RequestOptionsTest extends \PHPUnit_Framework_TestCase
@@ -41,7 +41,7 @@ class RequestOptionsTest extends \PHPUnit_Framework_TestCase
                 GuzzleRequestOptions::HEADERS => ['content' => 'html'],
             ]
         );
-        $this->assertInstanceOf('Toplib\GenericApi\Client\RequestOptions', $options);
+        $this->assertInstanceOf('Rafrsr\GenericApi\Client\RequestOptions', $options);
         $this->assertEquals('test', $options->getAll()[GuzzleRequestOptions::BODY]);
         $this->assertEquals(['content' => 'html'], $options->getAll()[GuzzleRequestOptions::HEADERS]);
     }

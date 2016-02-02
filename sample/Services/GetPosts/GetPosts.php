@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services\GetPosts;
+namespace Rafrsr\SampleApi\Services\GetPosts;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Toplib\GenericApi\ApiInterface;
-use Toplib\GenericApi\ApiRequestBuilder;
-use Toplib\SampleApi\Services\BasePostService;
+use Rafrsr\GenericApi\ApiInterface;
+use Rafrsr\GenericApi\ApiRequestBuilder;
+use Rafrsr\SampleApi\Services\BasePostService;
 
 /**
  * Class GetPosts
@@ -64,8 +64,8 @@ class GetPosts extends BasePostService
         $requestBuilder
             ->withMethod('GET')
             ->withUri($this->buildServiceUrl('/posts/'))
-            ->withJsonResponse('array<Toplib\SampleApi\Model\Post>')
-            ->withMock('Toplib\SampleApi\Services\GetPosts\GetPostsMock');
+            ->withJsonResponse('array<Rafrsr\SampleApi\Model\Post>')
+            ->withMock('Rafrsr\SampleApi\Services\GetPosts\GetPostsMock');
 
         if ($this->getUserId()) {
             $requestBuilder->options()->addQuery('userId', $this->getUserId());

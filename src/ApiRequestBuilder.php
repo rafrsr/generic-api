@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi;
+namespace Rafrsr\GenericApi;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
-use Toplib\GenericApi\Client\RequestOptions;
-use Toplib\GenericApi\Serializer\JsonMessageParser;
-use Toplib\GenericApi\Serializer\MessageParserInterface;
-use Toplib\GenericApi\Serializer\XMLMessageParser;
+use Rafrsr\GenericApi\Client\RequestOptions;
+use Rafrsr\GenericApi\Serializer\JsonMessageParser;
+use Rafrsr\GenericApi\Serializer\MessageParserInterface;
+use Rafrsr\GenericApi\Serializer\XMLMessageParser;
 
 /**
  * Class RequestBuilder

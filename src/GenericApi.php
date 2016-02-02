@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi;
+namespace Rafrsr\GenericApi;
 
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validation;
-use Toplib\GenericApi\Client\MockHandler;
-use Toplib\GenericApi\Exception\ApiException;
-use Toplib\GenericApi\Exception\InvalidApiDataException;
+use Rafrsr\GenericApi\Client\MockHandler;
+use Rafrsr\GenericApi\Exception\ApiException;
+use Rafrsr\GenericApi\Exception\InvalidApiDataException;
 
 /**
  * Class GenericApi

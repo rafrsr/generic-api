@@ -1,11 +1,11 @@
 # Generic API
 
-[![Build Status](https://travis-ci.org/toplib/generic-api.svg?branch=master)](https://travis-ci.org/toplib/generic-api)
-[![Coverage Status](https://coveralls.io/repos/toplib/generic-api/badge.svg?branch=master&service=github)](https://coveralls.io/github/toplib/generic-api?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/toplib/generic-api/version)](https://packagist.org/packages/toplib/generic-api)
-[![Latest Unstable Version](https://poser.pugx.org/toplib/generic-api/v/unstable)](//packagist.org/packages/toplib/generic-api)
-[![Total Downloads](https://poser.pugx.org/toplib/generic-api/downloads)](https://packagist.org/packages/toplib/generic-api)
-[![License](https://poser.pugx.org/toplib/generic-api/license)](https://packagist.org/packages/toplib/generic-api)
+[![Build Status](https://travis-ci.org/rafrsr/generic-api.svg?branch=master)](https://travis-ci.org/rafrsr/generic-api)
+[![Coverage Status](https://coveralls.io/repos/rafrsr/generic-api/badge.svg?branch=master&service=github)](https://coveralls.io/github/rafrsr/generic-api?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/rafrsr/generic-api/version)](https://packagist.org/packages/rafrsr/generic-api)
+[![Latest Unstable Version](https://poser.pugx.org/rafrsr/generic-api/v/unstable)](//packagist.org/packages/rafrsr/generic-api)
+[![Total Downloads](https://poser.pugx.org/rafrsr/generic-api/downloads)](https://packagist.org/packages/rafrsr/generic-api)
+[![License](https://poser.pugx.org/rafrsr/generic-api/license)](https://packagist.org/packages/rafrsr/generic-api)
 
 API Abstraction layer with mocks. Tools for creating structured SDKs or API implementations easy and following some simple guidelines.
 
@@ -26,11 +26,11 @@ GenericApi is solution to keep things organized and follow a similar pattern for
 ## Installation
 
 1. [Install composer](https://getcomposer.org/download/)
-2. Execute: `composer require toplib/generic-api`
+2. Execute: `composer require rafrsr/generic-api`
 
 ## Documentation
 
-Full documentation are available on the [wiki page](https://github.com/toplib/generic-api/wiki)
+Full documentation are available on the [wiki page](https://github.com/rafrsr/generic-api/wiki)
 
 ## Functional Example
 

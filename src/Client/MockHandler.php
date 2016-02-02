@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi\Client;
+namespace Rafrsr\GenericApi\Client;
 
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Toplib\GenericApi\ApiMockInterface;
+use Rafrsr\GenericApi\ApiMockInterface;
 
 /**
  * Adapter to use with Guzzle client to fake connection to the api using ApiMockInterface.

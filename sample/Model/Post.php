@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Model;
+namespace Rafrsr\SampleApi\Model;
 
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;

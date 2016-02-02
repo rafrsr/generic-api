@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi\Tests\Serializer;
+namespace Rafrsr\GenericApi\Tests\Serializer;
 
 use GuzzleHttp\Psr7\Request;
-use Toplib\GenericApi\Serializer\XMLMessageParser;
-use Toplib\SampleApi\Model\Post;
+use Rafrsr\GenericApi\Serializer\XMLMessageParser;
+use Rafrsr\SampleApi\Model\Post;
 
 class XMLMessageParserTest extends \PHPUnit_Framework_TestCase
 {

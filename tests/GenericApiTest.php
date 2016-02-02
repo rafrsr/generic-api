@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi\Tests;
+namespace Rafrsr\GenericApi\Tests;
 
 use GuzzleHttp\Psr7\Response;
-use Toplib\GenericApi\ApiInterface;
-use Toplib\GenericApi\ApiRequestBuilder;
-use Toplib\GenericApi\GenericApi;
-use Toplib\GenericApi\GenericApiMock;
-use Toplib\GenericApi\GenericApiService;
+use Rafrsr\GenericApi\ApiInterface;
+use Rafrsr\GenericApi\ApiRequestBuilder;
+use Rafrsr\GenericApi\GenericApi;
+use Rafrsr\GenericApi\GenericApiMock;
+use Rafrsr\GenericApi\GenericApiService;
 
 /**
  * Class GenericApiMockTest

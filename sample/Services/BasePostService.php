@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services;
+namespace Rafrsr\SampleApi\Services;
 
-use Toplib\GenericApi\ApiServiceInterface;
+use Rafrsr\GenericApi\ApiServiceInterface;
 
 /**
  * Class BasePostService

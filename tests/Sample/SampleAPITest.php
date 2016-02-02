@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi\Tests\Sample;
+namespace Rafrsr\GenericApi\Tests\Sample;
 
-use Toplib\GenericApi\ApiInterface;
-use Toplib\SampleApi\Model\Post;
-use Toplib\SampleApi\SampleAPI;
+use Rafrsr\GenericApi\ApiInterface;
+use Rafrsr\SampleApi\Model\Post;
+use Rafrsr\SampleApi\SampleAPI;
 
 /**
  * Class SampleAPITest

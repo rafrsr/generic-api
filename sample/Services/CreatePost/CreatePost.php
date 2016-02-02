@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services\CreatePost;
+namespace Rafrsr\SampleApi\Services\CreatePost;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Toplib\GenericApi\ApiInterface;
-use Toplib\GenericApi\ApiRequestBuilder;
-use Toplib\SampleApi\Services\UpdatePost\UpdatePost;
+use Rafrsr\GenericApi\ApiInterface;
+use Rafrsr\GenericApi\ApiRequestBuilder;
+use Rafrsr\SampleApi\Services\UpdatePost\UpdatePost;
 
 /**
  * Class CreatePost
@@ -31,6 +31,6 @@ class CreatePost extends UpdatePost
         $requestBuilder
             ->withMethod('POST')
             ->withUri($this->buildServiceUrl('/posts/'))
-            ->withMock('Toplib\SampleApi\Services\CreatePost\CreatePostMock');
+            ->withMock('Rafrsr\SampleApi\Services\CreatePost\CreatePostMock');
     }
 }

@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services\DeletePost;
+namespace Rafrsr\SampleApi\Services\DeletePost;
 
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
-use Toplib\GenericApi\ApiMockInterface;
+use Rafrsr\GenericApi\ApiMockInterface;
 
 /**
  * Class DeletePostMock

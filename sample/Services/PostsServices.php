@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services;
+namespace Rafrsr\SampleApi\Services;
 
-use Toplib\SampleApi\Model\Post;
-use Toplib\SampleApi\Services\CreatePost\CreatePost;
-use Toplib\SampleApi\Services\DeletePost\DeletePost;
-use Toplib\SampleApi\Services\GetPost\GetPost;
-use Toplib\SampleApi\Services\GetPosts\GetPosts;
-use Toplib\SampleApi\Services\UpdatePost\UpdatePost;
+use Rafrsr\SampleApi\Model\Post;
+use Rafrsr\SampleApi\Services\CreatePost\CreatePost;
+use Rafrsr\SampleApi\Services\DeletePost\DeletePost;
+use Rafrsr\SampleApi\Services\GetPost\GetPost;
+use Rafrsr\SampleApi\Services\GetPosts\GetPosts;
+use Rafrsr\SampleApi\Services\UpdatePost\UpdatePost;
 
 /**
  * Class PostsServices
@@ -25,7 +25,7 @@ class PostsServices
 {
 
     /**
-     * @var \Toplib\GenericApi\ApiInterface
+     * @var \Rafrsr\GenericApi\ApiInterface
      */
     protected $api;
 
@@ -57,7 +57,7 @@ class PostsServices
      * @param $id
      *
      * @return Post
-     * @throws \Toplib\GenericApi\Exception\ApiException
+     * @throws \Rafrsr\GenericApi\Exception\ApiException
      */
     public function get($id)
     {

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi;
+namespace Rafrsr\GenericApi;
 
 /**
  * Class GenericApiServices

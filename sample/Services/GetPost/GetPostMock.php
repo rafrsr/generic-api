@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services\GetPost;
+namespace Rafrsr\SampleApi\Services\GetPost;
 
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
-use Toplib\GenericApi\ApiMockInterface;
+use Rafrsr\GenericApi\ApiMockInterface;
 
 /**
  * Class GetPostMock

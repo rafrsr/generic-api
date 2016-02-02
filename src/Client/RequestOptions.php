@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi\Client;
+namespace Rafrsr\GenericApi\Client;
 
 use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\RequestOptions as GuzzleRequestOptions;

@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services\DeletePost;
+namespace Rafrsr\SampleApi\Services\DeletePost;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Toplib\GenericApi\ApiInterface;
-use Toplib\GenericApi\ApiRequestBuilder;
-use Toplib\SampleApi\Services\UpdatePost\UpdatePost;
+use Rafrsr\GenericApi\ApiInterface;
+use Rafrsr\GenericApi\ApiRequestBuilder;
+use Rafrsr\SampleApi\Services\UpdatePost\UpdatePost;
 
 /**
  * Class DeletePost
@@ -30,6 +30,6 @@ class DeletePost extends UpdatePost
         $requestBuilder
             ->withMethod('DELETE')
             ->withUri($this->buildServiceUrl('/posts/%s', [$this->getPost()->getId()]))
-            ->withMock('Toplib\SampleApi\Services\DeletePost\DeletePostMock');
+            ->withMock('Rafrsr\SampleApi\Services\DeletePost\DeletePostMock');
     }
 }

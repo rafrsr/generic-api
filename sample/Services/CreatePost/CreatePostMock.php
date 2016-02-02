@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services\CreatePost;
+namespace Rafrsr\SampleApi\Services\CreatePost;
 
 use Guzzle\Http\QueryString;
 use GuzzleHttp\Psr7\Response;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Http\Message\RequestInterface;
-use Toplib\GenericApi\ApiMockInterface;
-use Toplib\SampleApi\Model\Post;
+use Rafrsr\GenericApi\ApiMockInterface;
+use Rafrsr\SampleApi\Model\Post;
 
 /**
  * Class CreatePostMock

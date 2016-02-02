@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi\Serializer;
+namespace Rafrsr\GenericApi\Serializer;
 
 use JMS\Serializer\SerializerBuilder;
 use Psr\Http\Message\MessageInterface;

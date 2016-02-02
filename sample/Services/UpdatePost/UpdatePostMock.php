@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\SampleApi\Services\UpdatePost;
+namespace Rafrsr\SampleApi\Services\UpdatePost;
 
 use Guzzle\Http\QueryString;
 use GuzzleHttp\Psr7\Response;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Http\Message\RequestInterface;
-use Toplib\GenericApi\ApiMockInterface;
+use Rafrsr\GenericApi\ApiMockInterface;
 
 /**
  * Class UpdatePostMock
@@ -28,7 +28,7 @@ class UpdatePostMock implements ApiMockInterface
     public function mock(RequestInterface $request)
     {
         $json = file_get_contents(__DIR__ . '/../../Fixtures/post1.json');
-        $post = SerializerBuilder::create()->build()->deserialize($json, 'Toplib\SampleApi\Model\Post', 'json');
+        $post = SerializerBuilder::create()->build()->deserialize($json, 'Rafrsr\SampleApi\Model\Post', 'json');
         $body = $request->getBody()->getContents();
         $bodyArray = QueryString::fromString($body);
         $post->setTitle($bodyArray['title']);

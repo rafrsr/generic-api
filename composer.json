@@ -1,9 +1,9 @@
 {
-  "name": "toplib/generic-api",
+  "name": "rafrsr/generic-api",
   "description": "API Abstraction layer with mocks",
   "license": "MIT",
   "type": "library",
-  "homepage": "http://toplib.github.io/generic-api/",
+  "homepage": "http://rafrsr.github.io/generic-api/",
   "authors": [
     {
       "name": "Rafael SR",
@@ -12,7 +12,7 @@
     }
   ],
   "support": {
-    "wiki": "https://github.com/toplib/generic-api/wiki"
+    "wiki": "https://github.com/rafrsr/generic-api/wiki"
   },
   "keywords": [
     "api",
@@ -24,13 +24,13 @@
       "autoload.php"
     ],
     "psr-4": {
-      "Toplib\\GenericApi\\": "src/"
+      "Rafrsr\\GenericApi\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Toplib\\GenericApi\\Tests\\": "tests/",
-      "Toplib\\SampleApi\\": "sample/"
+      "Rafrsr\\GenericApi\\Tests\\": "tests/",
+      "Rafrsr\\SampleApi\\": "sample/"
     }
   },
   "require": {
@@ -49,7 +49,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "1.0.x-dev"
+      "dev-master": "2.0.x-dev"
     }
   }
 }

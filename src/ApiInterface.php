@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Toplib\GenericApi;
+namespace Rafrsr\GenericApi;
 
 use Psr\Http\Message\ResponseInterface;
-use Toplib\GenericApi\Exception\ApiException;
+use Rafrsr\GenericApi\Exception\ApiException;
 
 /**
  * Interface ApiInterface
