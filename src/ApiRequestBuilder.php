@@ -11,6 +11,7 @@
 
 namespace Rafrsr\GenericApi;
 
+use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Http\Message\RequestInterface;
@@ -303,25 +304,28 @@ class ApiRequestBuilder
     }
 
     /**
-     * @param $class string|object $class class to unserialize the response, otherwise return a array
+     * @param                        $class   string|object $class class to unserialize the response, otherwise return a array
+     * @param DeserializationContext $context context
      *
      * @return $this
      */
-    public function withJsonResponse($class = null)
+    public function withJsonResponse($class = null, DeserializationContext $context = null)
     {
-        $this->responseParser = new JsonMessageParser($class);
+        $this->responseParser = new JsonMessageParser($class, $context);
 
         return $this;
     }
 
     /**
-     * @param $class string|object $class class to unserialize the response, otherwise return a array
+     * @param string|object          $class                   class to unserialize the response, otherwise return a array
+     * @param DeserializationContext $context                 context
+     * @param boolean                $removeNamespacePrefixes remove all namespaces prefixes before deserialize
      *
      * @return $this
      */
-    public function withXmlResponse($class = null)
+    public function withXmlResponse($class = null, DeserializationContext $context = null, $removeNamespacePrefixes = false)
     {
-        $this->responseParser = new XMLMessageParser($class);
+        $this->responseParser = new XMLMessageParser($class, $context, $removeNamespacePrefixes);
 
         return $this;
     }

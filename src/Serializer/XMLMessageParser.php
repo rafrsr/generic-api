@@ -11,6 +11,8 @@
 
 namespace Rafrsr\GenericApi\Serializer;
 
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializerBuilder;
 use Psr\Http\Message\MessageInterface;
 
 /**
@@ -18,16 +20,36 @@ use Psr\Http\Message\MessageInterface;
  */
 class XMLMessageParser extends AbstractSerializerMessageParser
 {
+    protected $removeNamespacePrefixes;
+
+    /**
+     * @param string|object          $class                   class to create a valid response object
+     * @param DeserializationContext $context                 context
+     * @param boolean                $removeNamespacePrefixes remove all namespaces prefixes before deserialize
+     */
+    public function __construct($class = null, DeserializationContext $context = null, $removeNamespacePrefixes = false)
+    {
+        parent::__construct($class, $context);
+        $this->removeNamespacePrefixes = $removeNamespacePrefixes;
+    }
 
     /**
      * @inheritdoc
      */
     public function parse(MessageInterface $message)
     {
-        if ($deserialized = $this->deserialize($message, 'xml')) {
-            return $deserialized;
-        } else {
-            return simplexml_load_string($message->getBody()->getContents());
+        $content = $message->getBody()->getContents();
+        if ($this->removeNamespacePrefixes) {
+            $content = preg_replace('/(<\/?)(\w+:)/', '$1', $content);
         }
+
+        if ($this->class) {
+            $parsedResponse = SerializerBuilder::create()->build()
+                ->deserialize($content, $this->class, 'xml', $this->context);
+        } else {
+            $parsedResponse = simplexml_load_string($content);
+        }
+
+        return $parsedResponse;
     }
 }
