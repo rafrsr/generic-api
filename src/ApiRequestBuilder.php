@@ -55,7 +55,7 @@ class ApiRequestBuilder
     /**
      * @var string
      */
-    protected $protocol;
+    protected $protocol = 1.1;
 
     /**
      * @var RequestOptions
