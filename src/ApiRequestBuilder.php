@@ -296,6 +296,7 @@ class ApiRequestBuilder
     public function withXMLBody($data, SerializationContext $context = null)
     {
         $xml = SerializerBuilder::create()->build()->serialize($data, 'xml', $context);
+        $this->addHeader('Content-Type', 'text/xml; charset=utf-8');
         $this->withBody($xml);
 
         return $this;
