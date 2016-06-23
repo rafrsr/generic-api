@@ -21,6 +21,7 @@ use Rafrsr\GenericApi\Client\RequestOptions;
 use Rafrsr\GenericApi\Serializer\JsonMessageParser;
 use Rafrsr\GenericApi\Serializer\MessageParserInterface;
 use Rafrsr\GenericApi\Serializer\XMLMessageParser;
+use Rafrsr\GenericApi\Serializer\CallbackMessageParser;
 
 /**
  * Class RequestBuilder
@@ -334,6 +335,21 @@ class ApiRequestBuilder
     public function withXmlResponse($class = null, DeserializationContext $context = null, $removeNamespacePrefixes = false)
     {
         $this->responseParser = new XMLMessageParser($class, $context, $removeNamespacePrefixes);
+
+        return $this;
+    }
+
+    /**
+     * Set a callback to process the response and return custom response object
+     * the callback receive a Psr\Http\Message\MessageInterface as first argument
+     *
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function withCallbackResponse(callable $callback)
+    {
+        $this->responseParser = new CallbackMessageParser($callback);
 
         return $this;
     }
