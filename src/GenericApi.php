@@ -33,11 +33,17 @@ class GenericApi implements ApiInterface
     protected $mode;
 
     /**
+     * @var ApiRequestBuilder
+     */
+    protected $requestBuilder;
+
+    /**
      * @param string $mode
      */
     public function __construct($mode = self::MODE_LIVE)
     {
         $this->mode = $mode;
+        $this->requestBuilder = new ApiRequestBuilder();
     }
 
     /**
@@ -91,12 +97,11 @@ class GenericApi implements ApiInterface
     {
         $this->validate($service);
 
-        $requestBuilder = new ApiRequestBuilder();
-        $service->buildRequest($requestBuilder, $this);
+        $service->buildRequest($this->requestBuilder, $this);
 
-        $httpResponse = $this->sendRequest($requestBuilder->getRequest());
+        $httpResponse = $this->sendRequest($this->requestBuilder->getRequest());
 
-        if ($responseParser = $requestBuilder->getResponseParser()) {
+        if ($responseParser = $this->requestBuilder->getResponseParser()) {
             if ($newResponse = $responseParser->parse($httpResponse)) {
                 return $newResponse;
             }
