@@ -65,7 +65,7 @@ class GenericApi implements ApiInterface
      */
     public function isModeSandBox()
     {
-        return $this->getMode() == $this::MODE_SANDBOX;
+        return $this->getMode() === $this::MODE_SANDBOX;
     }
 
     /**
@@ -73,7 +73,7 @@ class GenericApi implements ApiInterface
      */
     public function isModeLive()
     {
-        return $this->getMode() == $this::MODE_LIVE;
+        return $this->getMode() === $this::MODE_LIVE;
     }
 
     /**
@@ -81,7 +81,7 @@ class GenericApi implements ApiInterface
      */
     public function isModeMock()
     {
-        return $this->getMode() == $this::MODE_MOCK;
+        return $this->getMode() === $this::MODE_MOCK;
     }
 
     /**
