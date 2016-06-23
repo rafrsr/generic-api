@@ -280,7 +280,11 @@ class ApiRequestBuilder
      */
     public function withJsonBody($data, SerializationContext $context = null)
     {
-        $json = SerializerBuilder::create()->build()->serialize($data, 'json', $context);
+        if (is_string($data)) {
+            $json = $data;
+        } else {
+            $json = SerializerBuilder::create()->build()->serialize($data, 'json', $context);
+        }
         $this->withBody($json);
 
         return $this;
@@ -296,7 +300,11 @@ class ApiRequestBuilder
      */
     public function withXMLBody($data, SerializationContext $context = null)
     {
-        $xml = SerializerBuilder::create()->build()->serialize($data, 'xml', $context);
+        if (is_string($data)) {
+            $xml = $data;
+        } else {
+            $xml = SerializerBuilder::create()->build()->serialize($data, 'xml', $context);
+        }
         $this->addHeader('Content-Type', 'text/xml; charset=utf-8');
         $this->withBody($xml);
 
