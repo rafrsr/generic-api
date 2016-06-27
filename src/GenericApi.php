@@ -163,7 +163,7 @@ class GenericApi implements ApiInterface
     protected function validate(ApiServiceInterface $service)
     {
         $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
-        $violations = $validator->validate($service, null, true, true);
+        $violations = $validator->validate($service);
         /** @var ConstraintViolation $violation */
         foreach ($violations as $violation) {
             $errorMessage = $violation->getMessage();
