@@ -27,11 +27,11 @@ class GenericApiTest extends \PHPUnit_Framework_TestCase
     public function testMode()
     {
         $api = new GenericApi(ApiInterface::MODE_MOCK);
-        $this->assertTrue($api->isModeMock());
+        static::assertTrue($api->isModeMock());
         $api->setMode(ApiInterface::MODE_SANDBOX);
-        $this->assertTrue($api->isModeSandBox());
+        static::assertTrue($api->isModeSandBox());
         $api->setMode(ApiInterface::MODE_LIVE);
-        $this->assertTrue($api->isModeLive());
+        static::assertTrue($api->isModeLive());
     }
 
     public function testGenericApi()
@@ -51,7 +51,7 @@ class GenericApiTest extends \PHPUnit_Framework_TestCase
         $service = new GenericApiService($request);
         $response = $api->process($service);
 
-        $this->assertEquals('200', $response->getStatusCode());
-        $this->assertEquals(1, json_decode($response->getBody()->getContents(), true)['id']);
+        static::assertEquals('200', $response->getStatusCode());
+        static::assertEquals(1, json_decode($response->getBody()->getContents(), true)['id']);
     }
 }

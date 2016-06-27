@@ -36,18 +36,18 @@ class SampleAPITest extends \PHPUnit_Framework_TestCase
     public function testGetPosts()
     {
         $posts = $this->api->posts()->getList();
-        $this->assertEquals(1, $posts[0]->getId());
-        $this->assertCount(100, $posts);
+        static::assertEquals(1, $posts[0]->getId());
+        static::assertCount(100, $posts);
 
         //filter by userId
         $posts = $this->api->posts()->getList(1);
-        $this->assertCount(10, $posts);
+        static::assertCount(10, $posts);
     }
 
     public function testGetPost()
     {
         $post = $this->api->posts()->get(1);
-        $this->assertEquals(1, $post->getId());
+        static::assertEquals(1, $post->getId());
     }
 
     public function testUpdatePost()
@@ -55,7 +55,7 @@ class SampleAPITest extends \PHPUnit_Framework_TestCase
         $post = $this->api->posts()->get(1);
         $post->setBody('updated');
         $postUpdated = $this->api->posts()->update($post);
-        $this->assertEquals($post->getBody(), $postUpdated->getBody());
+        static::assertEquals($post->getBody(), $postUpdated->getBody());
     }
 
     public function testCreatePost()
@@ -65,12 +65,12 @@ class SampleAPITest extends \PHPUnit_Framework_TestCase
         $post->setBody('facere repellat provident occaecati excepturi optio reprehenderit');
         $post->setUserId('1');
         $postCreated = $this->api->posts()->create($post);
-        $this->assertEquals(101, $postCreated->getId());
+        static::assertEquals(101, $postCreated->getId());
     }
 
     public function testDeletePost()
     {
         $post = $this->api->posts()->get(1);
-        $this->assertTrue($this->api->posts()->delete($post));
+        static::assertTrue($this->api->posts()->delete($post));
     }
 }

@@ -24,7 +24,7 @@ class XMLMessageParserTest extends \PHPUnit_Framework_TestCase
 
         $parser = new XMLMessageParser();
         $xml = $parser->parse($request);
-        $this->assertEquals(simplexml_load_string($message), $xml);
+        static::assertEquals(simplexml_load_string($message), $xml);
     }
 
     public function testParseSerializer()
@@ -35,7 +35,7 @@ class XMLMessageParserTest extends \PHPUnit_Framework_TestCase
         /** @var Post $post */
         $parser = new XMLMessageParser(new Post());
         $post = $parser->parse($request);
-        $this->assertEquals(1, $post->getId());
-        $this->assertEquals('lorem', $post->getTitle());
+        static::assertEquals(1, $post->getId());
+        static::assertEquals('lorem', $post->getTitle());
     }
 }

@@ -30,50 +30,50 @@ class ApiRequestBuilderTest extends \PHPUnit_Framework_TestCase
     public function testStaticCreate()
     {
         $rb = ApiRequestBuilder::create();
-        $this->assertInstanceOf(ApiRequestBuilder::class, $rb);
+        static::assertInstanceOf(ApiRequestBuilder::class, $rb);
     }
 
     public function testWithMethod()
     {
         $this->rb->withMethod('GET');
-        $this->assertEquals('GET', $this->rb->getMethod());
+        static::assertEquals('GET', $this->rb->getMethod());
     }
 
     public function testWithUri()
     {
         $this->rb->withUri('http://api.example.org');
-        $this->assertEquals('http://api.example.org', $this->rb->getUri());
+        static::assertEquals('http://api.example.org', $this->rb->getUri());
     }
 
     public function testWithBody()
     {
         $this->rb->withBody('{"test":1}');
-        $this->assertEquals('{"test":1}', $this->rb->getBody());
+        static::assertEquals('{"test":1}', $this->rb->getBody());
     }
 
     public function testWithHeaders()
     {
         $this->rb->withHeaders(['foo' => 'bar']);
-        $this->assertEquals(['foo' => 'bar'], $this->rb->getHeaders());
+        static::assertEquals(['foo' => 'bar'], $this->rb->getHeaders());
     }
 
     public function testAddHeaders()
     {
         $this->rb->addHeader('foo', 'bar');
         $this->rb->addHeader('foo2', 'bar2');
-        $this->assertEquals(['foo' => 'bar', 'foo2' => 'bar2'], $this->rb->getHeaders());
+        static::assertEquals(['foo' => 'bar', 'foo2' => 'bar2'], $this->rb->getHeaders());
     }
 
     public function testWithProtocol()
     {
         $this->rb->withProtocol('1.0');
-        $this->assertEquals('1.0', $this->rb->getProtocol());
+        static::assertEquals('1.0', $this->rb->getProtocol());
     }
 
     public function testWithMock()
     {
         $this->rb->withMock(GetPostMock::class);
-        $this->assertInstanceOf(GetPostMock::class, $this->rb->getMock());
+        static::assertInstanceOf(GetPostMock::class, $this->rb->getMock());
     }
 
     public function testWithJsonBody()
@@ -84,7 +84,7 @@ class ApiRequestBuilderTest extends \PHPUnit_Framework_TestCase
         $post->setBody('body');
         $post->setUserId(1);
         $this->rb->withJsonBody($post);
-        $this->assertEquals('{"userId":1,"id":1,"title":"title","body":"body"}', $this->rb->getBody());
+        static::assertEquals('{"userId":1,"id":1,"title":"title","body":"body"}', $this->rb->getBody());
     }
 
     public function testWithXmlBody()
@@ -107,6 +107,6 @@ class ApiRequestBuilderTest extends \PHPUnit_Framework_TestCase
 
 XML;
 
-        $this->assertEquals($xml, $this->rb->getBody());
+        static::assertEquals($xml, $this->rb->getBody());
     }
 }

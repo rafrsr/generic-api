@@ -31,19 +31,19 @@ class ApiRequestTest extends \PHPUnit_Framework_TestCase
     public function testWithMock()
     {
         $this->request->withMock(new GetPostMock());
-        $this->assertInstanceOf(GetPostMock::class, $this->request->getMock());
+        static::assertInstanceOf(GetPostMock::class, $this->request->getMock());
     }
 
     public function testWithOptions()
     {
-        $this->assertInstanceOf(RequestOptions::class, $this->request->getOptions());
+        static::assertInstanceOf(RequestOptions::class, $this->request->getOptions());
 
         $this->request->withOptions(['debug' => true]);
-        $this->assertInstanceOf(RequestOptions::class, $this->request->getOptions());
+        static::assertInstanceOf(RequestOptions::class, $this->request->getOptions());
 
         $options = new RequestOptions(['debug' => true]);
         $this->request->withOptions($options);
 
-        $this->assertEquals($options, $this->request->getOptions());
+        static::assertEquals($options, $this->request->getOptions());
     }
 }

@@ -24,7 +24,7 @@ class JsonMessageParserTest extends \PHPUnit_Framework_TestCase
 
         $parser = new JsonMessageParser();
         $array = $parser->parse($request);
-        $this->assertEquals(json_decode($message), $array);
+        static::assertEquals(json_decode($message), $array);
     }
 
     public function testParseSerializer()
@@ -35,7 +35,7 @@ class JsonMessageParserTest extends \PHPUnit_Framework_TestCase
         /** @var Post $post */
         $parser = new JsonMessageParser(new Post());
         $post = $parser->parse($request);
-        $this->assertEquals(1, $post->getId());
-        $this->assertEquals('lorem', $post->getTitle());
+        static::assertEquals(1, $post->getId());
+        static::assertEquals('lorem', $post->getTitle());
     }
 }
