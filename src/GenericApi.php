@@ -13,6 +13,13 @@ namespace Rafrsr\GenericApi;
 
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
+use Rafrsr\GenericApi\Debug\ApiDebugger;
+use Rafrsr\GenericApi\Debug\RequestProcess;
+use Rafrsr\GenericApi\Debug\RequestProcessStack;
+use Rafrsr\GenericApi\Event\OnResponseEvent;
+use Rafrsr\GenericApi\Event\PreBuildRequestEvent;
+use Rafrsr\GenericApi\Event\PreSendRequestEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validation;
 use Rafrsr\GenericApi\Client\MockHandler;
@@ -24,6 +31,9 @@ use Rafrsr\GenericApi\Exception\InvalidApiDataException;
  */
 class GenericApi implements ApiInterface
 {
+    const EVENT_PRE_BUILD_REQUEST = 'api_pre_build_request';
+    const EVENT_PRE_SEND_REQUEST = 'api_pre_send_request';
+    const EVENT_ON_RESPONSE = 'api_on_response';
 
     /**
      * one of the ApiInterface constant modes
@@ -33,11 +43,27 @@ class GenericApi implements ApiInterface
     protected $mode;
 
     /**
-     * @param string $mode
+     * @var EventDispatcher
      */
-    public function __construct($mode = self::MODE_LIVE)
+    protected $eventDispatcher;
+
+    /**
+     * @var ApiDebugger
+     */
+    protected $debugger;
+
+    /**
+     * @param string  $mode
+     * @param boolean $debug
+     */
+    public function __construct($mode = self::MODE_LIVE, $debug = false)
     {
         $this->mode = $mode;
+        $this->eventDispatcher = new EventDispatcher();
+
+        if ($debug) {
+            $this->debugger = new ApiDebugger();
+        }
     }
 
     /**
@@ -85,6 +111,24 @@ class GenericApi implements ApiInterface
     }
 
     /**
+     * @return EventDispatcher
+     */
+    public function getEventDispatcher()
+    {
+        return $this->eventDispatcher;
+    }
+
+    /**
+     * Return debugger instance or null if the debugger is disabled
+     *
+     * @return ApiDebugger|null
+     */
+    public function getDebugger()
+    {
+        return $this->debugger;
+    }
+
+    /**
      * @inheritDoc
      */
     public function process(ApiServiceInterface $service)
@@ -93,9 +137,24 @@ class GenericApi implements ApiInterface
 
         $requestBuilder = $this->makeRequestBuilder();
 
-        $service->buildRequest($requestBuilder, $this);
+        $this->getEventDispatcher()->dispatch(self::EVENT_PRE_BUILD_REQUEST, new PreBuildRequestEvent($this, $service, $requestBuilder));
 
-        $httpResponse = $this->sendRequest($requestBuilder->getRequest());
+        $service->buildRequest($requestBuilder, $this);
+        $request = $requestBuilder->getRequest();
+
+        $this->getEventDispatcher()->dispatch(self::EVENT_PRE_SEND_REQUEST, new PreSendRequestEvent($this, $service, $request));
+
+        if ($this->debugger) {
+            $process = $this->debugger->beginRequestProcess($request);
+        }
+
+        $httpResponse = $this->sendRequest($request);
+
+        if ($this->debugger && isset($process)) {
+            $this->debugger->finishRequestProcess($process, $httpResponse);
+        }
+
+        $this->getEventDispatcher()->dispatch(self::EVENT_ON_RESPONSE, new OnResponseEvent($this, $service, $httpResponse));
 
         if ($responseParser = $requestBuilder->getResponseParser()) {
             if ($newResponse = $responseParser->parse($httpResponse)) {
@@ -172,5 +231,38 @@ class GenericApi implements ApiInterface
             }
             throw new InvalidApiDataException($errorMessage);
         }
+    }
+
+    /**
+     * Event triggered before build the request
+     * Rafrsr\GenericApi\Event\PreBuildRequestEvent is received as first param
+     *
+     * @param callable $callback
+     */
+    public function preBuildRequest(callable $callback)
+    {
+        $this->getEventDispatcher()->addListener(self::EVENT_PRE_BUILD_REQUEST, $callback);
+    }
+
+    /**
+     * Event triggered before send the request
+     * Rafrsr\GenericApi\Event\PreSendRequestEvent is received as first param
+     *
+     * @param callable $callback
+     */
+    public function preSendRequest(callable $callback)
+    {
+        $this->getEventDispatcher()->addListener(self::EVENT_PRE_SEND_REQUEST, $callback);
+    }
+
+    /**
+     * Event triggered on receive a response
+     * Rafrsr\GenericApi\Event\OnResponseEvent is received as first param
+     *
+     * @param callable $callback
+     */
+    public function onResponse(callable $callback)
+    {
+        $this->getEventDispatcher()->addListener(self::EVENT_ON_RESPONSE, $callback);
     }
 }
