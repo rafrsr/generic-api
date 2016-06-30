@@ -39,9 +39,11 @@ class ApiDebugger
      * @param RequestProcess    $process
      * @param ResponseInterface $response
      */
-    public function finishRequestProcess(RequestProcess $process, ResponseInterface $response)
+    public function finishRequestProcess(RequestProcess $process, ResponseInterface $response = null)
     {
-        $process->setResponse($response);
+        if ($response) {
+            $process->setResponse($response);
+        }
         $this->requestStack[] = $process;
     }
 

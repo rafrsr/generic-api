@@ -12,10 +12,9 @@
 namespace Rafrsr\GenericApi;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 use Rafrsr\GenericApi\Debug\ApiDebugger;
-use Rafrsr\GenericApi\Debug\RequestProcess;
-use Rafrsr\GenericApi\Debug\RequestProcessStack;
 use Rafrsr\GenericApi\Event\OnResponseEvent;
 use Rafrsr\GenericApi\Event\PreBuildRequestEvent;
 use Rafrsr\GenericApi\Event\PreSendRequestEvent;
@@ -144,14 +143,28 @@ class GenericApi implements ApiInterface
 
         $this->getEventDispatcher()->dispatch(self::EVENT_PRE_SEND_REQUEST, new PreSendRequestEvent($this, $service, $request));
 
+        $debugProcess = null;
         if ($this->debugger) {
-            $process = $this->debugger->beginRequestProcess($request);
+            $debugProcess = $this->debugger->beginRequestProcess($request);
         }
 
-        $httpResponse = $this->sendRequest($request);
+        $exception = null;
+        $httpResponse = null;
+        try {
+            $httpResponse = $this->sendRequest($request);
+        } catch (RequestException $e) {
+            $httpResponse = $e->getResponse();
+            //silent exception during debug
+            $exception = $e;
+        }
 
-        if ($this->debugger && isset($process)) {
-            $this->debugger->finishRequestProcess($process, $httpResponse);
+        if ($debugProcess !== null) {
+            $this->debugger->finishRequestProcess($debugProcess, $httpResponse);
+        }
+
+        //has pending exception
+        if ($exception && $exception instanceof \Exception) {
+            throw $exception;
         }
 
         $this->getEventDispatcher()->dispatch(self::EVENT_ON_RESPONSE, new OnResponseEvent($this, $service, $httpResponse));

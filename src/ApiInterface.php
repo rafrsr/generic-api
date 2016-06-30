@@ -11,6 +11,7 @@
 
 namespace Rafrsr\GenericApi;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 use Rafrsr\GenericApi\Exception\ApiException;
 
@@ -52,6 +53,7 @@ interface ApiInterface
      *
      * @return ResponseInterface|mixed
      * @throws ApiException if any other kind of error is happened before or after the request is sent
+     * @throws GuzzleException if any error happen in the communication
      */
     public function process(ApiServiceInterface $service);
 }
