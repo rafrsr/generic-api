@@ -44,7 +44,7 @@
     "jms/serializer": "~0.11|~1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^5.0",
+    "phpunit/phpunit": "^4.1|^5.0",
     "toplib/coding-standard": "dev-master",
     "satooshi/php-coveralls": "~1.0"
   },
