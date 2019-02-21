@@ -35,7 +35,7 @@
     },
     "require": {
         "php": ">=5.5",
-        "guzzlehttp/guzzle": "^6.0",
+        "guzzlehttp/guzzle": "^6.3",
         "symfony/validator": "^3.4|^4.0",
         "symfony/event-dispatcher": "^3.4|^4.0",
         "doctrine/annotations": "^1.2",
