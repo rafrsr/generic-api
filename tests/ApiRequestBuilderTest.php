@@ -11,11 +11,12 @@
 
 namespace Rafrsr\GenericApi\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Rafrsr\GenericApi\ApiRequestBuilder;
 use Rafrsr\SampleApi\Model\Post;
 use Rafrsr\SampleApi\Services\GetPost\GetPostMock;
 
-class ApiRequestBuilderTest extends \PHPUnit_Framework_TestCase
+class ApiRequestBuilderTest extends TestCase
 {
     /**
      * @var ApiRequestBuilder

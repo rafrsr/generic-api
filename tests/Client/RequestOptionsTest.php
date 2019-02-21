@@ -12,10 +12,11 @@
 namespace Rafrsr\GenericApi\Tests\Client;
 
 use GuzzleHttp\Cookie\CookieJar;
+use PHPUnit\Framework\TestCase;
 use Rafrsr\GenericApi\Client\RequestOptions;
 use GuzzleHttp\RequestOptions as GuzzleRequestOptions;
 
-class RequestOptionsTest extends \PHPUnit_Framework_TestCase
+class RequestOptionsTest extends TestCase
 {
     /**
      * @var RequestOptions

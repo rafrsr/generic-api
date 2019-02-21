@@ -44,8 +44,8 @@
         "jms/serializer": "~0.11|~1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.0",
-        "php-coveralls/php-coveralls": "^2.1"
+        "php-coveralls/php-coveralls": "^2.1",
+        "symfony/phpunit-bridge": "^4.2"
     },
     "extra": {
         "branch-alias": {

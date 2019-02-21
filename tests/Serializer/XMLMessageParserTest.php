@@ -12,10 +12,11 @@
 namespace Rafrsr\GenericApi\Tests\Serializer;
 
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\TestCase;
 use Rafrsr\GenericApi\Serializer\XMLMessageParser;
 use Rafrsr\SampleApi\Model\Post;
 
-class XMLMessageParserTest extends \PHPUnit_Framework_TestCase
+class XMLMessageParserTest extends TestCase
 {
     public function testParseNative()
     {

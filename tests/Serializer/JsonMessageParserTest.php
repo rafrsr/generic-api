@@ -12,10 +12,11 @@
 namespace Rafrsr\GenericApi\Tests\Serializer;
 
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\TestCase;
 use Rafrsr\GenericApi\Serializer\JsonMessageParser;
 use Rafrsr\SampleApi\Model\Post;
 
-class JsonMessageParserTest extends \PHPUnit_Framework_TestCase
+class JsonMessageParserTest extends TestCase
 {
     public function testParseNative()
     {
