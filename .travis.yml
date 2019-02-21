@@ -1,6 +1,8 @@
 language: php
-
 sudo: false
+cache:
+    directories:
+        - $HOME/.composer/cache
 
 php:
     - 5.5
@@ -12,18 +14,17 @@ php:
 matrix:
     fast_finish: true
     include:
-        -   php: 5.6
-            env: SYMFONY_VERSION=2.7.*
-        -   php: 5.6
-            env: SYMFONY_VERSION=2.8.*
-        -   php: 5.6
-            env: SYMFONY_VERSION=3.4.*
-        -   php: 7.1
-            env: SYMFONY_VERSION=4.0.*
+        - php: 5.6
+          env: SYMFONY_VERSION=2.7.*
+        - php: 5.6
+          env: SYMFONY_VERSION=2.8.*
+        - php: 5.6
+          env: SYMFONY_VERSION=3.4.*
+        - php: 7.1
+          env: SYMFONY_VERSION=4.0.*
 
-cache:
-    directories:
-        - $HOME/.composer/cache
+    allow_failures:
+        - php: hhvm
 
 before_install:
     - composer selfupdate
