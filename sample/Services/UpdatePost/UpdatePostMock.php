@@ -30,7 +30,7 @@ class UpdatePostMock implements ApiMockInterface
         $json = file_get_contents(__DIR__ . '/../../Fixtures/post1.json');
         $post = SerializerBuilder::create()->build()->deserialize($json, 'Rafrsr\SampleApi\Model\Post', 'json');
         $body = $request->getBody()->getContents();
-        $bodyArray = QueryString::fromString($body);
+        $bodyArray = \GuzzleHttp\Psr7\parse_query($body);
         $post->setTitle($bodyArray['title']);
         $post->setUserId($bodyArray['userId']);
         $post->setBody($bodyArray['body']);

@@ -11,6 +11,7 @@
 
 namespace Rafrsr\GenericApi\Tests\Sample;
 
+use PHPUnit\Framework\TestCase;
 use Rafrsr\GenericApi\ApiInterface;
 use Rafrsr\SampleApi\Model\Post;
 use Rafrsr\SampleApi\SampleAPI;
@@ -18,7 +19,7 @@ use Rafrsr\SampleApi\SampleAPI;
 /**
  * Class SampleAPITest
  */
-class SampleAPITest extends \PHPUnit_Framework_TestCase
+class SampleAPITest extends TestCase
 {
     /**
      * @var SampleAPI

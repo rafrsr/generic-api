@@ -11,7 +11,6 @@
 
 namespace Rafrsr\SampleApi\Services\GetPosts;
 
-use Guzzle\Http\QueryString;
 use GuzzleHttp\Psr7\Response;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Http\Message\RequestInterface;
@@ -30,17 +29,17 @@ class GetPostsMock implements ApiMockInterface
     public function mock(RequestInterface $request)
     {
         $json = file_get_contents(__DIR__ . '/../../Fixtures/posts.json');
-        $userId = QueryString::fromString($request->getUri()->getQuery())->get('userId');
+        $parsedQuery = \GuzzleHttp\Psr7\parse_query($request->getUri()->getQuery());
 
         $response = new Response(200, [], $json);
 
         //filter
-        if ($userId) {
+        if (isset($parsedQuery['userId'])) {
             /** @var Post[] $posts */
             $posts = (new JsonMessageParser('array<Rafrsr\SampleApi\Model\Post>'))->parse($response);
             $filteredPosts = [];
             foreach ($posts as $post) {
-                if ($post->getUserId() == $userId) {
+                if ($post->getUserId() == $parsedQuery['userId']) {
                     $filteredPosts[] = $post;
                 }
             }

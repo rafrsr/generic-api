@@ -12,6 +12,7 @@
 namespace Rafrsr\GenericApi\Tests;
 
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 use Rafrsr\GenericApi\ApiInterface;
 use Rafrsr\GenericApi\ApiRequestBuilder;
 use Rafrsr\GenericApi\GenericApi;
@@ -21,7 +22,7 @@ use Rafrsr\GenericApi\GenericApiService;
 /**
  * Class GenericApiMockTest
  */
-class GenericApiTest extends \PHPUnit_Framework_TestCase
+class GenericApiTest extends TestCase
 {
 
     public function testMode()

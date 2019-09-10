@@ -1,56 +1,55 @@
 {
-  "name": "rafrsr/generic-api",
-  "description": "API Abstraction layer with mocks",
-  "license": "MIT",
-  "type": "library",
-  "homepage": "http://rafrsr.github.io/generic-api/",
-  "authors": [
-    {
-      "name": "Rafael SR",
-      "email": "raf.rsr@gmail.com",
-      "homepage": "https://github.com/rafrsr"
-    }
-  ],
-  "support": {
-    "wiki": "https://github.com/rafrsr/generic-api/wiki"
-  },
-  "keywords": [
-    "api",
-    "sdk",
-    "guzzle"
-  ],
-  "autoload": {
-    "files": [
-      "autoload.php"
+    "name": "rafrsr/generic-api",
+    "description": "API Abstraction layer with mocks",
+    "license": "MIT",
+    "type": "library",
+    "homepage": "http://rafrsr.github.io/generic-api/",
+    "authors": [
+        {
+            "name": "Rafael SR",
+            "email": "raf.rsr@gmail.com",
+            "homepage": "https://github.com/rafrsr"
+        }
     ],
-    "psr-4": {
-      "Rafrsr\\GenericApi\\": "src/"
+    "support": {
+        "wiki": "https://github.com/rafrsr/generic-api/wiki"
+    },
+    "keywords": [
+        "api",
+        "sdk",
+        "guzzle"
+    ],
+    "autoload": {
+        "files": [
+            "autoload.php"
+        ],
+        "psr-4": {
+            "Rafrsr\\GenericApi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rafrsr\\GenericApi\\Tests\\": "tests/",
+            "Rafrsr\\SampleApi\\": "sample/"
+        }
+    },
+    "require": {
+        "php": ">=5.5",
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/validator": "^3.4|^4.0",
+        "symfony/event-dispatcher": "^3.4|^4.0",
+        "doctrine/annotations": "^1.2",
+        "doctrine/cache": "^1.4",
+        "symfony/property-access": "^3.4|^4.0",
+        "jms/serializer": "~0.11|~1.0"
+    },
+    "require-dev": {
+        "php-coveralls/php-coveralls": "^2.1",
+        "symfony/phpunit-bridge": "^4.2"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.0.x-dev"
+        }
     }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Rafrsr\\GenericApi\\Tests\\": "tests/",
-      "Rafrsr\\SampleApi\\": "sample/"
-    }
-  },
-  "require": {
-    "php": ">=5.5",
-    "guzzlehttp/guzzle": "^6.0",
-    "symfony/validator": "^2.7|^3.4|^4.0",
-    "symfony/event-dispatcher": "^2.7|^3.4|^4.0",
-    "doctrine/annotations": "^1.2",
-    "doctrine/cache": "^1.4",
-    "symfony/property-access": "^2.7|^3.4|^4.0",
-    "jms/serializer": "~0.11|~1.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^4.1|^5.0",
-    "toplib/coding-standard": "dev-master",
-    "satooshi/php-coveralls": "~1.0"
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "2.0.x-dev"
-    }
-  }
 }
