@@ -162,12 +162,12 @@ class GenericApi implements ApiInterface
             $this->debugger->finishRequestProcess($debugProcess, $httpResponse);
         }
 
+        $this->getEventDispatcher()->dispatch(self::EVENT_ON_RESPONSE, new OnResponseEvent($this, $service, $httpResponse));
+
         //has pending exception
         if ($exception && $exception instanceof \Exception) {
             throw $exception;
         }
-
-        $this->getEventDispatcher()->dispatch(self::EVENT_ON_RESPONSE, new OnResponseEvent($this, $service, $httpResponse));
 
         if ($responseParser = $requestBuilder->getResponseParser()) {
             if ($newResponse = $responseParser->parse($httpResponse)) {
