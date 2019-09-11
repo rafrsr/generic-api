@@ -29,18 +29,25 @@ class OnResponseEvent extends ApiEvent
     protected $request;
 
     /**
+     * @var \Exception
+     */
+    protected $exception;
+
+    /**
      * PreBuildRequestEvent constructor.
      *
      * @param ApiInterface          $api
      * @param ApiServiceInterface   $service
      * @param ResponseInterface     $response
      * @param RequestInterface|null $request TODO: mark as required in v3.0
+     * @param \Exception|null $exception
      */
-    public function __construct(ApiInterface $api, ApiServiceInterface $service, ResponseInterface $response, RequestInterface $request = null)
+    public function __construct(ApiInterface $api, ApiServiceInterface $service, ResponseInterface $response, RequestInterface $request = null, \Exception $exception = null)
     {
         parent::__construct($api, $service);
         $this->response = $response;
         $this->request = $request;
+        $this->exception = $exception;
     }
 
     /**

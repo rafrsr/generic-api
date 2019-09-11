@@ -14,16 +14,16 @@ namespace Rafrsr\GenericApi;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
+use Rafrsr\GenericApi\Client\MockHandler;
 use Rafrsr\GenericApi\Debug\ApiDebugger;
 use Rafrsr\GenericApi\Event\OnResponseEvent;
 use Rafrsr\GenericApi\Event\PreBuildRequestEvent;
 use Rafrsr\GenericApi\Event\PreSendRequestEvent;
+use Rafrsr\GenericApi\Exception\ApiException;
+use Rafrsr\GenericApi\Exception\InvalidApiDataException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validation;
-use Rafrsr\GenericApi\Client\MockHandler;
-use Rafrsr\GenericApi\Exception\ApiException;
-use Rafrsr\GenericApi\Exception\InvalidApiDataException;
 
 /**
  * Class GenericApi
@@ -162,17 +162,20 @@ class GenericApi implements ApiInterface
             $this->debugger->finishRequestProcess($debugProcess, $httpResponse);
         }
 
-        $this->getEventDispatcher()->dispatch(self::EVENT_ON_RESPONSE, new OnResponseEvent($this, $service, $httpResponse, $request));
+        $newResponse = null;
+        if ($responseParser = $requestBuilder->getResponseParser()) {
+            $newResponse = $responseParser->parse($httpResponse);
+        }
+
+        $this->getEventDispatcher()->dispatch(self::EVENT_ON_RESPONSE, new OnResponseEvent($this, $service, $httpResponse, $request, $exception));
 
         //has pending exception
         if ($exception && $exception instanceof \Exception) {
             throw $exception;
         }
 
-        if ($responseParser = $requestBuilder->getResponseParser()) {
-            if ($newResponse = $responseParser->parse($httpResponse)) {
-                return $newResponse;
-            }
+        if ($newResponse) {
+            return $newResponse;
         }
 
         return $httpResponse;
