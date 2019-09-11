@@ -159,7 +159,7 @@ class GenericApi implements ApiInterface
         }
 
         if ($debugProcess !== null) {
-            $this->debugger->finishRequestProcess($debugProcess, $httpResponse);
+            $this->debugger->finishRequestProcess($debugProcess, $httpResponse, $exception);
         }
 
         $newResponse = null;

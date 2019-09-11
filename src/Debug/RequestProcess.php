@@ -11,6 +11,7 @@
 
 namespace Rafrsr\GenericApi\Debug;
 
+use Exception;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -27,15 +28,22 @@ class RequestProcess
     protected $response;
 
     /**
+     * @var Exception
+     */
+    protected $exception;
+
+    /**
      * RequestProcess constructor.
      *
      * @param RequestInterface  $request
      * @param ResponseInterface $response
+     * @param Exception         $exception
      */
-    public function __construct(RequestInterface $request = null, ResponseInterface $response = null)
+    public function __construct(RequestInterface $request = null, ResponseInterface $response = null, Exception $exception = null)
     {
         $this->request = $request;
         $this->response = $response;
+        $this->exception = $exception;
     }
 
     /**
@@ -74,6 +82,26 @@ class RequestProcess
     public function setResponse(ResponseInterface $response)
     {
         $this->response = $response;
+
+        return $this;
+    }
+
+    /**
+     * @return Exception
+     */
+    public function getException()
+    {
+        return $this->exception;
+    }
+
+    /**
+     * @param Exception $exception
+     *
+     * @return $this
+     */
+    public function setException(Exception $exception)
+    {
+        $this->exception = $exception;
 
         return $this;
     }

@@ -11,6 +11,7 @@
 
 namespace Rafrsr\GenericApi\Debug;
 
+use Exception;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -38,11 +39,15 @@ class ApiDebugger
      *
      * @param RequestProcess    $process
      * @param ResponseInterface $response
+     * @param Exception|null    $exception
      */
-    public function finishRequestProcess(RequestProcess $process, ResponseInterface $response = null)
+    public function finishRequestProcess(RequestProcess $process, ResponseInterface $response = null, Exception $exception = null)
     {
         if ($response) {
             $process->setResponse($response);
+        }
+        if ($exception) {
+            $process->setException($exception);
         }
         $this->requestStack[] = $process;
     }

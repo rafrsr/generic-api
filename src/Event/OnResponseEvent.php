@@ -65,4 +65,12 @@ class OnResponseEvent extends ApiEvent
     {
         return $this->request;
     }
+
+    /**
+     * @return \Exception
+     */
+    public function getException()
+    {
+        return $this->exception;
+    }
 }
