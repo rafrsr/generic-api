@@ -13,6 +13,7 @@ namespace Rafrsr\GenericApi\Serializer;
 
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 use Psr\Http\Message\MessageInterface;
 
 /**
@@ -23,13 +24,14 @@ class XMLMessageParser extends AbstractSerializerMessageParser
     protected $removeNamespacePrefixes;
 
     /**
-     * @param string|object          $class                   class to create a valid response object
-     * @param DeserializationContext $context                 context
-     * @param boolean                $removeNamespacePrefixes remove all namespaces prefixes before deserialize
+     * @param string|object            $class                   class to create a valid response object
+     * @param DeserializationContext   $context                 context
+     * @param boolean                  $removeNamespacePrefixes remove all namespaces prefixes before deserialize
+     * @param SerializerInterface|null $serializer              use custom serializer
      */
-    public function __construct($class = null, DeserializationContext $context = null, $removeNamespacePrefixes = false)
+    public function __construct($class = null, DeserializationContext $context = null, $removeNamespacePrefixes = false, SerializerInterface $serializer = null)
     {
-        parent::__construct($class, $context);
+        parent::__construct($class, $context, $serializer);
         $this->removeNamespacePrefixes = $removeNamespacePrefixes;
     }
 
