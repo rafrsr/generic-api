@@ -48,6 +48,7 @@ abstract class AbstractSerializerMessageParser implements MessageParserInterface
             $class = get_class($class);
         }
         $this->class = $class;
+        $this->serializer = $serializer;
     }
 
     /**
