@@ -163,7 +163,7 @@ class GenericApi implements ApiInterface
         }
 
         $newResponse = null;
-        if ($responseParser = $requestBuilder->getResponseParser()) {
+        if (!$exception && $responseParser = $requestBuilder->getResponseParser()) {
             try {
                 $newResponse = $responseParser->parse($httpResponse);
             } catch (\Exception $e) {
