@@ -14,14 +14,15 @@ namespace Rafrsr\GenericApi;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Rafrsr\GenericApi\Client\RequestOptions;
+use Rafrsr\GenericApi\Serializer\CallbackMessageParser;
 use Rafrsr\GenericApi\Serializer\JsonMessageParser;
 use Rafrsr\GenericApi\Serializer\MessageParserInterface;
 use Rafrsr\GenericApi\Serializer\XMLMessageParser;
-use Rafrsr\GenericApi\Serializer\CallbackMessageParser;
 
 /**
  * Class RequestBuilder
@@ -315,26 +316,28 @@ class ApiRequestBuilder
     /**
      * @param                        $class   string|object $class class to unserialize the response, otherwise return a array
      * @param DeserializationContext $context context
+     * @param SerializerInterface|null $serializer use custom serializer
      *
      * @return $this
      */
-    public function withJsonResponse($class = null, DeserializationContext $context = null)
+    public function withJsonResponse($class = null, DeserializationContext $context = null, SerializerInterface $serializer = null)
     {
-        $this->responseParser = new JsonMessageParser($class, $context);
+        $this->responseParser = new JsonMessageParser($class, $context, $serializer);
 
         return $this;
     }
 
     /**
-     * @param string|object          $class                   class to unserialize the response, otherwise return a array
-     * @param DeserializationContext $context                 context
-     * @param boolean                $removeNamespacePrefixes remove all namespaces prefixes before deserialize
+     * @param string|object            $class                   class to unserialize the response, otherwise return a array
+     * @param DeserializationContext   $context                 context
+     * @param boolean                  $removeNamespacePrefixes remove all namespaces prefixes before deserialize
+     * @param SerializerInterface|null $serializer              use custom serializer
      *
      * @return $this
      */
-    public function withXmlResponse($class = null, DeserializationContext $context = null, $removeNamespacePrefixes = false)
+    public function withXmlResponse($class = null, DeserializationContext $context = null, $removeNamespacePrefixes = false, SerializerInterface $serializer = null)
     {
-        $this->responseParser = new XMLMessageParser($class, $context, $removeNamespacePrefixes);
+        $this->responseParser = new XMLMessageParser($class, $context, $removeNamespacePrefixes, $serializer);
 
         return $this;
     }

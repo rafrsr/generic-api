@@ -13,6 +13,7 @@ namespace Rafrsr\GenericApi\Serializer;
 
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 use Psr\Http\Message\MessageInterface;
 
 /**
@@ -32,15 +33,22 @@ abstract class AbstractSerializerMessageParser implements MessageParserInterface
     protected $context;
 
     /**
-     * @param string|object          $class   class to create a valid response object
-     * @param DeserializationContext $context context
+     * @var SerializerInterface
      */
-    public function __construct($class = null, DeserializationContext $context = null)
+    protected $serializer;
+
+    /**
+     * @param string|object          $class      class to create a valid response object
+     * @param DeserializationContext $context    context
+     * @param SerializerInterface    $serializer use custom serializer
+     */
+    public function __construct($class = null, DeserializationContext $context = null, SerializerInterface $serializer = null)
     {
         if (is_object($class)) {
             $class = get_class($class);
         }
         $this->class = $class;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -51,8 +59,12 @@ abstract class AbstractSerializerMessageParser implements MessageParserInterface
         if ($this->class) {
             $content = $message->getBody()->getContents();
 
-            $parsedResponse = SerializerBuilder::create()->build()
-                ->deserialize($content, $this->class, $format, $this->context);
+            $serializer = $this->serializer;
+            if (!$serializer) {
+                $serializer = SerializerBuilder::create()->build();
+            }
+
+            $parsedResponse = $serializer->deserialize($content, $this->class, $format, $this->context);
 
             return $parsedResponse;
         } else {
