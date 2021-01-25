@@ -54,7 +54,7 @@ class GenericApiTest extends TestCase
 
         $api->onResponse(
             function (OnResponseEvent $event) {
-                self::assertLessThan(10, $event->getExecutionTime());
+                self::assertLessThan(1000, $event->getExecutionTime());
             }
         );
 
