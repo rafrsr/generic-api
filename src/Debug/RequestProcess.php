@@ -33,17 +33,24 @@ class RequestProcess
     protected $exception;
 
     /**
+     * @var int
+     */
+    protected $executionTime = 0;
+
+    /**
      * RequestProcess constructor.
      *
      * @param RequestInterface  $request
      * @param ResponseInterface $response
      * @param Exception         $exception
+     * @param int               $executionTime
      */
-    public function __construct(RequestInterface $request = null, ResponseInterface $response = null, Exception $exception = null)
+    public function __construct(RequestInterface $request = null, ResponseInterface $response = null, Exception $exception = null, $executionTime = 0)
     {
         $this->request = $request;
         $this->response = $response;
         $this->exception = $exception;
+        $this->executionTime = $executionTime;
     }
 
     /**
@@ -102,6 +109,26 @@ class RequestProcess
     public function setException(Exception $exception)
     {
         $this->exception = $exception;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExecutionTime()
+    {
+        return $this->executionTime;
+    }
+
+    /**
+     * @param int $executionTime
+     *
+     * @return $this
+     */
+    public function setExecutionTime($executionTime)
+    {
+        $this->executionTime = $executionTime;
 
         return $this;
     }

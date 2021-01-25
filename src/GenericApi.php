@@ -150,6 +150,7 @@ class GenericApi implements ApiInterface
 
         $exception = null;
         $httpResponse = null;
+        $startTime = microtime(true) * 1000;
         try {
             $httpResponse = $this->sendRequest($request);
         } catch (RequestException $e) {
@@ -158,8 +159,10 @@ class GenericApi implements ApiInterface
             $exception = $e;
         }
 
+        $executionTime = number_format((microtime(true) * 1000) - $startTime, 0, '', '');
+
         if ($debugProcess !== null) {
-            $this->debugger->finishRequestProcess($debugProcess, $httpResponse, $exception);
+            $this->debugger->finishRequestProcess($debugProcess, $httpResponse, $exception, $executionTime);
         }
 
         $newResponse = null;
@@ -172,7 +175,7 @@ class GenericApi implements ApiInterface
         }
 
         if ($httpResponse) {
-            $this->getEventDispatcher()->dispatch(self::EVENT_ON_RESPONSE, new OnResponseEvent($this, $service, $httpResponse, $request, $exception));
+            $this->getEventDispatcher()->dispatch(self::EVENT_ON_RESPONSE, new OnResponseEvent($this, $service, $httpResponse, $request, $exception, $executionTime));
         }
 
         //has pending exception
@@ -249,7 +252,7 @@ class GenericApi implements ApiInterface
         foreach ($violations as $violation) {
             $errorMessage = $violation->getMessage();
             if ($violation->getPropertyPath()) {
-                $errorMessage = sprintf('Error in field "%s": ', $violation->getPropertyPath()) . $errorMessage;
+                $errorMessage = sprintf('Error in field "%s": ', $violation->getPropertyPath()).$errorMessage;
             }
             throw new InvalidApiDataException($errorMessage);
         }

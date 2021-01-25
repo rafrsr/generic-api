@@ -34,6 +34,13 @@ class OnResponseEvent extends ApiEvent
     protected $exception;
 
     /**
+     * Request execution time in ms
+     *
+     * @var int
+     */
+    protected $executionTime = 0;
+
+    /**
      * PreBuildRequestEvent constructor.
      *
      * @param ApiInterface          $api
@@ -41,13 +48,15 @@ class OnResponseEvent extends ApiEvent
      * @param ResponseInterface     $response
      * @param RequestInterface|null $request TODO: mark as required in v3.0
      * @param \Exception|null $exception
+     * @param int $executionTime
      */
-    public function __construct(ApiInterface $api, ApiServiceInterface $service, ResponseInterface $response, RequestInterface $request = null, \Exception $exception = null)
+    public function __construct(ApiInterface $api, ApiServiceInterface $service, ResponseInterface $response, RequestInterface $request = null, \Exception $exception = null, $executionTime = 0)
     {
         parent::__construct($api, $service);
         $this->response = $response;
         $this->request = $request;
         $this->exception = $exception;
+        $this->executionTime = $executionTime;
     }
 
     /**
@@ -72,5 +81,13 @@ class OnResponseEvent extends ApiEvent
     public function getException()
     {
         return $this->exception;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExecutionTime()
+    {
+        return $this->executionTime;
     }
 }
