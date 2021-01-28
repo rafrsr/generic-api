@@ -136,12 +136,12 @@ class GenericApi implements ApiInterface
 
         $requestBuilder = $this->makeRequestBuilder();
 
-        $this->getEventDispatcher()->dispatch(self::EVENT_PRE_BUILD_REQUEST, new PreBuildRequestEvent($this, $service, $requestBuilder));
+        $this->getEventDispatcher()->dispatch(new PreBuildRequestEvent($this, $service, $requestBuilder), self::EVENT_PRE_BUILD_REQUEST);
 
         $service->buildRequest($requestBuilder, $this);
         $request = $requestBuilder->getRequest();
 
-        $this->getEventDispatcher()->dispatch(self::EVENT_PRE_SEND_REQUEST, new PreSendRequestEvent($this, $service, $request));
+        $this->getEventDispatcher()->dispatch(new PreSendRequestEvent($this, $service, $request), self::EVENT_PRE_SEND_REQUEST);
 
         $debugProcess = null;
         if ($this->debugger) {
@@ -175,7 +175,7 @@ class GenericApi implements ApiInterface
         }
 
         if ($httpResponse) {
-            $this->getEventDispatcher()->dispatch(self::EVENT_ON_RESPONSE, new OnResponseEvent($this, $service, $httpResponse, $request, $exception, $executionTime));
+            $this->getEventDispatcher()->dispatch(new OnResponseEvent($this, $service, $httpResponse, $request, $exception, $executionTime), self::EVENT_ON_RESPONSE);
         }
 
         //has pending exception

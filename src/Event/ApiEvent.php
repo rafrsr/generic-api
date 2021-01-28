@@ -13,7 +13,7 @@ namespace Rafrsr\GenericApi\Event;
 
 use Rafrsr\GenericApi\ApiInterface;
 use Rafrsr\GenericApi\ApiServiceInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class ApiEvent extends Event
 {
