@@ -13,6 +13,7 @@ namespace Rafrsr\GenericApi\Tests\Sample;
 
 use PHPUnit\Framework\TestCase;
 use Rafrsr\GenericApi\ApiInterface;
+use Rafrsr\GenericApi\Exception\InvalidApiDataException;
 use Rafrsr\SampleApi\Model\Post;
 use Rafrsr\SampleApi\SampleAPI;
 
@@ -67,6 +68,18 @@ class SampleAPITest extends TestCase
         $post->setUserId('1');
         $postCreated = $this->api->posts()->create($post);
         static::assertEquals(101, $postCreated->getId());
+    }
+
+    public function testCreatePostValidation()
+    {
+        $post = new Post();
+        $post->setBody('facere repellat provident occaecati excepturi optio reprehenderit');
+        $post->setUserId('1');
+
+        $this->expectException(InvalidApiDataException::class);
+        $this->expectExceptionMessage('Error in field "post.title": This value should not be blank.');
+
+        $this->api->posts()->create($post);
     }
 
     public function testDeletePost()

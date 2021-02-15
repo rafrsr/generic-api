@@ -246,7 +246,17 @@ class GenericApi implements ApiInterface
      */
     protected function validate(ApiServiceInterface $service)
     {
-        $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
+        $builder = Validation::createValidatorBuilder();
+
+        //since symfony/validator 5.2 Not passing true as first argument to "%s" is deprecated.
+        if (method_exists($builder, 'addDefaultDoctrineAnnotationReader')) {
+            $builder->enableAnnotationMapping(true);
+            $builder->addDefaultDoctrineAnnotationReader();
+        } else {
+            $builder->enableAnnotationMapping();
+        }
+
+        $validator = $builder->getValidator();
         $violations = $validator->validate($service);
         /** @var ConstraintViolation $violation */
         foreach ($violations as $violation) {
