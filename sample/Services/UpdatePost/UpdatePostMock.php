@@ -27,10 +27,10 @@ class UpdatePostMock implements ApiMockInterface
      */
     public function mock(RequestInterface $request)
     {
-        $json = file_get_contents(__DIR__ . '/../../Fixtures/post1.json');
+        $json = file_get_contents(__DIR__.'/../../Fixtures/post1.json');
         $post = SerializerBuilder::create()->build()->deserialize($json, 'Rafrsr\SampleApi\Model\Post', 'json');
         $body = $request->getBody()->getContents();
-        $bodyArray = \GuzzleHttp\Psr7\parse_query($body);
+        parse_str($body, $bodyArray);
         $post->setTitle($bodyArray['title']);
         $post->setUserId($bodyArray['userId']);
         $post->setBody($bodyArray['body']);

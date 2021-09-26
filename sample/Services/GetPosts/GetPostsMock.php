@@ -28,8 +28,8 @@ class GetPostsMock implements ApiMockInterface
      */
     public function mock(RequestInterface $request)
     {
-        $json = file_get_contents(__DIR__ . '/../../Fixtures/posts.json');
-        $parsedQuery = \GuzzleHttp\Psr7\parse_query($request->getUri()->getQuery());
+        $json = file_get_contents(__DIR__.'/../../Fixtures/posts.json');
+        parse_str($request->getUri()->getQuery(), $parsedQuery);
 
         $response = new Response(200, [], $json);
 

@@ -29,7 +29,7 @@ class CreatePostMock implements ApiMockInterface
     public function mock(RequestInterface $request)
     {
         $body = $request->getBody()->getContents();
-        $bodyArray = \GuzzleHttp\Psr7\parse_query($body);
+        parse_str($body, $bodyArray);
         $post = new Post();
         $post->setId(101);
         $post->setTitle($bodyArray['title']);
