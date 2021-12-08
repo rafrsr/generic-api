@@ -30,7 +30,7 @@ class SampleAPITest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->api = new SampleAPI(ApiInterface::MODE_MOCK); //can use MODE_LIVE
     }

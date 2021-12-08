@@ -12,9 +12,9 @@
 namespace Rafrsr\GenericApi\Tests\Client;
 
 use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\RequestOptions as GuzzleRequestOptions;
 use PHPUnit\Framework\TestCase;
 use Rafrsr\GenericApi\Client\RequestOptions;
-use GuzzleHttp\RequestOptions as GuzzleRequestOptions;
 
 class RequestOptionsTest extends TestCase
 {
@@ -23,7 +23,7 @@ class RequestOptionsTest extends TestCase
      */
     protected $options;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->options = new RequestOptions();
     }

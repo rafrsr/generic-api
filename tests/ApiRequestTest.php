@@ -24,7 +24,7 @@ class ApiRequestTest extends TestCase
      */
     protected $request;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->request = new ApiRequest('GET', 'http://api.example.org');
     }

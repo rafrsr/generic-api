@@ -23,7 +23,7 @@ class ApiRequestBuilderTest extends TestCase
      */
     protected $rb;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->rb = new ApiRequestBuilder();
     }
