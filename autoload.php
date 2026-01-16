@@ -9,14 +9,6 @@
  * file that was distributed with this source code.
  */
 
-//autoload annotations
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-    $loader = include __DIR__ . '/vendor/autoload.php';
-} elseif (file_exists(__DIR__ . '/../../../vendor/autoload.php')) {
-    $loader = include __DIR__ . '/../../../vendor/autoload.php';
-}
-if (isset($loader)) {
-    \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$loader, 'loadClass']);
-}
+// Annotations are now handled automatically in PHP 8.1+ and by JMS Serializer
 
 

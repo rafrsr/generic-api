@@ -11,8 +11,7 @@
 
 namespace Rafrsr\SampleApi\Model;
 
-use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -20,32 +19,21 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Post
 {
-    /**
-     * @SerializedName("userId")
-     * @Type("integer")
-     * @Assert\NotBlank()
-     */
-    protected $userId;
+    #[Serializer\SerializedName('userId')]
+    #[Serializer\Type('integer')]
+    #[Assert\NotBlank]
+    protected ?int $userId = null;
 
-    /**
-     * @var int
-     * @Type("integer")
-     */
-    protected $id;
+    #[Serializer\Type('integer')]
+    protected ?int $id = null;
 
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Type("string")
-     */
-    protected $title;
+    #[Serializer\Type('string')]
+    #[Assert\NotBlank]
+    protected ?string $title = null;
 
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Type("string")
-     */
-    protected $body;
+    #[Serializer\Type('string')]
+    #[Assert\NotBlank]
+    protected ?string $body = null;
 
     /**
      * @return mixed

@@ -11,6 +11,7 @@
 
 namespace Rafrsr\SampleApi\Services\UpdatePost;
 
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\Validator\Constraints as Assert;
 use Rafrsr\GenericApi\ApiInterface;
@@ -23,12 +24,8 @@ use Rafrsr\SampleApi\Services\BasePostService;
  */
 class UpdatePost extends BasePostService
 {
-
-    /**
-     * @var Post
-     * @Assert\NotBlank()
-     * @Assert\Valid()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Valid]
     private $post;
 
     /**
@@ -71,6 +68,14 @@ class UpdatePost extends BasePostService
             ->withUri($this->buildServiceUrl('/posts/%s', [$this->getPost()->getId()]))
             ->withJsonResponse('Rafrsr\SampleApi\Model\Post')
             ->withMock('Rafrsr\SampleApi\Services\UpdatePost\UpdatePostMock')
-            ->options()->setFormParams(json_decode(SerializerBuilder::create()->build()->serialize($this->post, 'json'), true));
+            ->options()->setFormParams(json_decode(
+                SerializerBuilder::create()
+                    ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
+                    ->addDefaultHandlers()
+                    ->addDefaultListeners()
+                    ->build()
+                    ->serialize($this->post, 'json'),
+                true
+            ));
     }
 }

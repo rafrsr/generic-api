@@ -248,13 +248,9 @@ class GenericApi implements ApiInterface
     {
         $builder = Validation::createValidatorBuilder();
 
-        //since symfony/validator 5.2 Not passing true as first argument to "%s" is deprecated.
-        if (method_exists($builder, 'addDefaultDoctrineAnnotationReader')) {
-            $builder->enableAnnotationMapping(true);
-            $builder->addDefaultDoctrineAnnotationReader();
-        } else {
-            $builder->enableAnnotationMapping();
-        }
+        // Symfony 7/8: Enable annotation mapping via static PHP loader method
+        // This allows reading @Assert annotations from docblocks
+        $builder->enableAttributeMapping();
 
         $validator = $builder->getValidator();
         $violations = $validator->validate($service);

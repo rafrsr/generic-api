@@ -12,6 +12,7 @@
 namespace Rafrsr\GenericApi\Serializer;
 
 use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Psr\Http\Message\MessageInterface;
@@ -46,7 +47,11 @@ class XMLMessageParser extends AbstractSerializerMessageParser
         }
 
         if ($this->class) {
-            $parsedResponse = SerializerBuilder::create()->build()
+            $parsedResponse = SerializerBuilder::create()
+                ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
+                ->addDefaultHandlers()
+                ->addDefaultListeners()
+                ->build()
                 ->deserialize($content, $this->class, 'xml', $this->context);
         } else {
             $parsedResponse = simplexml_load_string($content);

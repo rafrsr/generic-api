@@ -13,6 +13,7 @@ namespace Rafrsr\SampleApi\Services\CreatePost;
 
 use Guzzle\Http\QueryString;
 use GuzzleHttp\Psr7\Response;
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Http\Message\RequestInterface;
 use Rafrsr\GenericApi\ApiMockInterface;
@@ -36,6 +37,11 @@ class CreatePostMock implements ApiMockInterface
         $post->setUserId($bodyArray['userId']);
         $post->setBody($bodyArray['body']);
 
-        return new Response(200, [], SerializerBuilder::create()->build()->serialize($post, 'json'));
+        return new Response(200, [], SerializerBuilder::create()
+            ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
+            ->addDefaultHandlers()
+            ->addDefaultListeners()
+            ->build()
+            ->serialize($post, 'json'));
     }
 }

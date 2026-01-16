@@ -12,6 +12,7 @@
 namespace Rafrsr\SampleApi\Services\GetPosts;
 
 use GuzzleHttp\Psr7\Response;
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Http\Message\RequestInterface;
 use Rafrsr\GenericApi\ApiMockInterface;
@@ -44,7 +45,12 @@ class GetPostsMock implements ApiMockInterface
                 }
             }
 
-            $response = new Response(200, [], SerializerBuilder::create()->build()->serialize($filteredPosts, 'json'));
+            $response = new Response(200, [], SerializerBuilder::create()
+                ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
+                ->addDefaultHandlers()
+                ->addDefaultListeners()
+                ->build()
+                ->serialize($filteredPosts, 'json'));
         }
 
         return $response;

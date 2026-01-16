@@ -12,6 +12,7 @@
 namespace Rafrsr\GenericApi;
 
 use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
@@ -285,7 +286,12 @@ class ApiRequestBuilder
         if (is_string($data)) {
             $json = $data;
         } else {
-            $json = SerializerBuilder::create()->build()->serialize($data, 'json', $context);
+            $json = SerializerBuilder::create()
+                ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
+                ->addDefaultHandlers()
+                ->addDefaultListeners()
+                ->build()
+                ->serialize($data, 'json', $context);
         }
         $this->withBody($json);
 
@@ -305,7 +311,12 @@ class ApiRequestBuilder
         if (is_string($data)) {
             $xml = $data;
         } else {
-            $xml = SerializerBuilder::create()->build()->serialize($data, 'xml', $context);
+            $xml = SerializerBuilder::create()
+                ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
+                ->addDefaultHandlers()
+                ->addDefaultListeners()
+                ->build()
+                ->serialize($data, 'xml', $context);
         }
         $this->addHeader('Content-Type', 'text/xml; charset=utf-8');
         $this->withBody($xml);
