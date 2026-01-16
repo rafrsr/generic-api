@@ -43,7 +43,7 @@ abstract class AbstractSerializerMessageParser implements MessageParserInterface
      * @param DeserializationContext $context    context
      * @param SerializerInterface    $serializer use custom serializer
      */
-    public function __construct($class = null, DeserializationContext $context = null, SerializerInterface $serializer = null)
+    public function __construct($class = null, ?DeserializationContext $context = null, ?SerializerInterface $serializer = null)
     {
         if (is_object($class)) {
             $class = get_class($class);

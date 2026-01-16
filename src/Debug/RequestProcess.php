@@ -45,7 +45,7 @@ class RequestProcess
      * @param Exception         $exception
      * @param int               $executionTime
      */
-    public function __construct(RequestInterface $request = null, ResponseInterface $response = null, Exception $exception = null, $executionTime = 0)
+    public function __construct(?RequestInterface $request = null, ?ResponseInterface $response = null, ?Exception $exception = null, $executionTime = 0)
     {
         $this->request = $request;
         $this->response = $response;

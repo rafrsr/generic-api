@@ -30,7 +30,7 @@ class XMLMessageParser extends AbstractSerializerMessageParser
      * @param boolean                  $removeNamespacePrefixes remove all namespaces prefixes before deserialize
      * @param SerializerInterface|null $serializer              use custom serializer
      */
-    public function __construct($class = null, DeserializationContext $context = null, $removeNamespacePrefixes = false, SerializerInterface $serializer = null)
+    public function __construct($class = null, ?DeserializationContext $context = null, $removeNamespacePrefixes = false, ?SerializerInterface $serializer = null)
     {
         parent::__construct($class, $context, $serializer);
         $this->removeNamespacePrefixes = $removeNamespacePrefixes;

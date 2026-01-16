@@ -50,7 +50,7 @@ class OnResponseEvent extends ApiEvent
      * @param \Exception|null $exception
      * @param int $executionTime
      */
-    public function __construct(ApiInterface $api, ApiServiceInterface $service, ResponseInterface $response, RequestInterface $request, \Exception $exception = null, $executionTime = 0)
+    public function __construct(ApiInterface $api, ApiServiceInterface $service, ResponseInterface $response, RequestInterface $request, ?\Exception $exception = null, $executionTime = 0)
     {
         parent::__construct($api, $service);
         $this->response = $response;

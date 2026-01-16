@@ -42,7 +42,7 @@ class ApiDebugger
      * @param Exception|null    $exception
      * @param int               $executionTime
      */
-    public function finishRequestProcess(RequestProcess $process, ResponseInterface $response = null, Exception $exception = null, $executionTime = 0)
+    public function finishRequestProcess(RequestProcess $process, ?ResponseInterface $response = null, ?Exception $exception = null, $executionTime = 0)
     {
         $process->setExecutionTime($executionTime);
 

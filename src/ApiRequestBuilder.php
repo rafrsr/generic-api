@@ -281,7 +281,7 @@ class ApiRequestBuilder
      *
      * @return $this
      */
-    public function withJsonBody($data, SerializationContext $context = null)
+    public function withJsonBody($data, ?SerializationContext $context = null)
     {
         if (is_string($data)) {
             $json = $data;
@@ -306,7 +306,7 @@ class ApiRequestBuilder
      *
      * @return $this
      */
-    public function withXMLBody($data, SerializationContext $context = null)
+    public function withXMLBody($data, ?SerializationContext $context = null)
     {
         if (is_string($data)) {
             $xml = $data;
@@ -331,7 +331,7 @@ class ApiRequestBuilder
      *
      * @return $this
      */
-    public function withJsonResponse($class = null, DeserializationContext $context = null, SerializerInterface $serializer = null)
+    public function withJsonResponse($class = null, ?DeserializationContext $context = null, ?SerializerInterface $serializer = null)
     {
         $this->responseParser = new JsonMessageParser($class, $context, $serializer);
 
@@ -346,7 +346,7 @@ class ApiRequestBuilder
      *
      * @return $this
      */
-    public function withXmlResponse($class = null, DeserializationContext $context = null, $removeNamespacePrefixes = false, SerializerInterface $serializer = null)
+    public function withXmlResponse($class = null, ?DeserializationContext $context = null, $removeNamespacePrefixes = false, ?SerializerInterface $serializer = null)
     {
         $this->responseParser = new XMLMessageParser($class, $context, $removeNamespacePrefixes, $serializer);
 
