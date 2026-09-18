@@ -19,7 +19,7 @@ use Rafrsr\GenericApi\ApiServiceInterface;
 class OnResponseEvent extends ApiEvent
 {
     /**
-     * @var ResponseInterface
+     * @var ResponseInterface|null
      */
     protected $response;
 
@@ -45,12 +45,12 @@ class OnResponseEvent extends ApiEvent
      *
      * @param ApiInterface          $api
      * @param ApiServiceInterface   $service
-     * @param ResponseInterface     $response
+     * @param ResponseInterface|null $response null when the request failed without any HTTP response
      * @param RequestInterface $request
      * @param \Exception|null $exception
      * @param int $executionTime
      */
-    public function __construct(ApiInterface $api, ApiServiceInterface $service, ResponseInterface $response, RequestInterface $request, ?\Exception $exception = null, $executionTime = 0)
+    public function __construct(ApiInterface $api, ApiServiceInterface $service, ?ResponseInterface $response, RequestInterface $request, ?\Exception $exception = null, $executionTime = 0)
     {
         parent::__construct($api, $service);
         $this->response = $response;
@@ -60,7 +60,7 @@ class OnResponseEvent extends ApiEvent
     }
 
     /**
-     * @return ResponseInterface
+     * @return ResponseInterface|null
      */
     public function getResponse()
     {

@@ -13,6 +13,7 @@ namespace Rafrsr\GenericApi;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use Psr\Http\Message\ResponseInterface;
 use Rafrsr\GenericApi\Client\MockHandler;
 use Rafrsr\GenericApi\Debug\ApiDebugger;
@@ -157,6 +158,9 @@ class GenericApi implements ApiInterface
             $httpResponse = $e->getResponse();
             //silent exception during debug
             $exception = $e;
+        } catch (TransferException $e) {
+            // connection errors (timeout, dns, reset before any byte) never carry a response
+            $exception = $e;
         }
 
         $executionTime = number_format((microtime(true) * 1000) - $startTime, 0, '', '');
@@ -174,9 +178,8 @@ class GenericApi implements ApiInterface
             }
         }
 
-        if ($httpResponse) {
-            $this->getEventDispatcher()->dispatch(new OnResponseEvent($this, $service, $httpResponse, $request, $exception, $executionTime), self::EVENT_ON_RESPONSE);
-        }
+        // dispatched even without response, a request that died in the network must be visible to the listeners too
+        $this->getEventDispatcher()->dispatch(new OnResponseEvent($this, $service, $httpResponse, $request, $exception, $executionTime), self::EVENT_ON_RESPONSE);
 
         //has pending exception
         if ($exception && $exception instanceof \Exception) {

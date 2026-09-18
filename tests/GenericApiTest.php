@@ -11,9 +11,12 @@
 
 namespace Rafrsr\GenericApi\Tests;
 
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Rafrsr\GenericApi\ApiInterface;
+use Rafrsr\GenericApi\ApiRequestInterface;
 use Rafrsr\GenericApi\ApiRequestBuilder;
 use Rafrsr\GenericApi\Event\OnResponseEvent;
 use Rafrsr\GenericApi\GenericApi;
@@ -62,5 +65,75 @@ class GenericApiTest extends TestCase
 
         static::assertEquals('200', $response->getStatusCode());
         static::assertEquals(1, json_decode($response->getBody()->getContents(), true)['id']);
+    }
+
+    public function testOnResponseEventIsDispatchedWhenConnectionFails()
+    {
+        $request = ApiRequestBuilder::create()
+                                    ->withMethod('get')
+                                    ->withUri('http://jsonplaceholder.typicode.com/posts/1')
+                                    ->getRequest();
+
+        // ConnectException does not extend RequestException, is the one guzzle throws on timeout, dns or reset
+        $connectException = new ConnectException('Connection reset by peer', $request);
+
+        $this->assertOnResponseEventIsDispatchedWithoutResponse($request, $connectException);
+    }
+
+    public function testOnResponseEventIsDispatchedWhenRequestFailsWithoutResponse()
+    {
+        $request = ApiRequestBuilder::create()
+                                    ->withMethod('get')
+                                    ->withUri('http://jsonplaceholder.typicode.com/posts/1')
+                                    ->getRequest();
+
+        $requestException = new RequestException('Error completing request', $request);
+
+        $this->assertOnResponseEventIsDispatchedWithoutResponse($request, $requestException);
+    }
+
+    /**
+     * @param ApiRequestInterface $request
+     * @param \Exception          $sendException exception thrown by sendRequest
+     */
+    private function assertOnResponseEventIsDispatchedWithoutResponse(ApiRequestInterface $request, \Exception $sendException)
+    {
+        $api = new class($sendException) extends GenericApi {
+            private $sendException;
+
+            public function __construct(\Exception $sendException)
+            {
+                parent::__construct();
+                $this->sendException = $sendException;
+            }
+
+            protected function sendRequest(ApiRequestInterface $request)
+            {
+                throw $this->sendException;
+            }
+        };
+
+        $service = new GenericApiService($request);
+
+        $dispatchedEvent = null;
+        $api->onResponse(
+            function (OnResponseEvent $event) use (&$dispatchedEvent) {
+                $dispatchedEvent = $event;
+            }
+        );
+
+        $thrownException = null;
+        try {
+            $api->process($service);
+        } catch (\Exception $e) {
+            $thrownException = $e;
+        }
+
+        static::assertSame($sendException, $thrownException, 'The exception must be rethrown after dispatching the event');
+        static::assertInstanceOf(OnResponseEvent::class, $dispatchedEvent, 'The listener must be executed even without response');
+        static::assertNull($dispatchedEvent->getResponse());
+        static::assertSame($request, $dispatchedEvent->getRequest());
+        static::assertSame($sendException, $dispatchedEvent->getException());
+        static::assertSame($service, $dispatchedEvent->getService());
     }
 }
